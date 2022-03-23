@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
+#include "error.h"
 using namespace std;
 
 const int MAXN_WORD = 10101;
@@ -11,19 +12,27 @@ const int MAXN_WORD = 10101;
 class Word {
 private:
 	string str;
-	char begin, end;
+	int begin, end;
 	int length;
 public:
-	Word() {}
+	Word() {
+		str = "";
+		begin = end = length = 0;
+	}
 	Word(string s) {
 		str = std::move(s);
 		length = str.length();
-		begin = str[0];
-		end = str[length - 1];
+		begin = str[0] - 'a';
+		end = str[length - 1] - 'a';
 	}
-
 	void print() {
 		cout << str << endl;
+	}
+	int getBegin() {
+		return begin;
+	}
+	int getEnd() {
+		return end;
 	}
 };
 
