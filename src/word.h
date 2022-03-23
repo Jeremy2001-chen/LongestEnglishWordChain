@@ -26,13 +26,16 @@ public:
 		end = str[length - 1] - 'a';
 	}
 	void print() {
-		cout << str << endl;
+		cout << str << " ";
 	}
 	int getBegin() {
 		return begin;
 	}
 	int getEnd() {
 		return end;
+	}
+	string getStr() {
+		return str;
 	}
 };
 

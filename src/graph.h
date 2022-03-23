@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "word.h"
 using namespace std;
 
 class Edges {
@@ -10,15 +11,18 @@ private:
 	int next;
 	int start, end;
 	int v;
+	Word* word;
 public:
 	Edges() {
 		start = end = next = v = 0;
+		word = NULL;
 	}
-	Edges(int _start, int _end, int _next, int _v) {
+	Edges(int _start, int _end, int _next, int _v, Word* _word) {
 		start = _start;
 		end = _end;
 		next = _next;
 		v = _v;
+		word = _word;
 	}
 	int getStart() {
 		return start;
@@ -32,14 +36,18 @@ public:
 	int getNext() {
 		return next;
 	}
+
+	Word* getWord() {
+		return word;
+	}
 };
 
 const int MAXN_POINT = 30;
 
 class Graph {
 private:
-	int first[MAXN_POINT];
-	int in_degree[MAXN_POINT];
+	int first[MAXN_POINT]; // 前向星首边
+	int in_degree[MAXN_POINT]; // 入度
 	vector <Edges*>* edges;
 	int point_cnt, edge_cnt;
 public:
@@ -48,12 +56,12 @@ public:
 		memset(first, 0, point_cnt << 2);
 		memset(in_degree, 0, point_cnt << 2);
 		edges = new vector<Edges*>();
-		edges->push_back(new Edges(0, 0, 0, 0));
+		edges->push_back(new Edges(0, 0, 0, 0, NULL));
 		edge_cnt = 0;
 	}
-	void link(int s, int e, int v) {
+	void link(int s, int e, int v, Word * word) {
 		edge_cnt++;
-		edges->push_back(new Edges(s, e, first[s], v));
+		edges->push_back(new Edges(s, e, first[s], v, word));
 		//cout << "link : " << s << " " << e << " " << v << endl;
 		first[s] = edge_cnt;
 		in_degree[e]++;
@@ -72,6 +80,9 @@ public:
 	}
 	int getEdgeStart(int e) {
 		return (*edges)[e]->getStart();
+	}
+	Word* getEdgeWord(int e) {
+		return (*edges)[e]->getWord();
 	}
 	int getNext(int e) {
 		return (*edges)[e]->getNext();

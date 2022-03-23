@@ -15,9 +15,9 @@ static void buildGraph(Graph** graph, Graph** noLoopGraph, Word* wd, int cnt) {
 	graph2 = new Graph(SET_SIZE);
 	for (int i = 1; i <= cnt; i++) {
 		int s = word[i]->getBegin(), t = word[i]->getEnd();
-		graph1->link(s, t, 1);
+		graph1->link(s, t, 1, word[i]);
 		if (s != t)
-			graph2->link(s, t, 1);
+			graph2->link(s, t, 1, word[i]);
 	}
 	*graph = graph1;
 	*noLoopGraph = graph2;
