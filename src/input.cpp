@@ -4,6 +4,7 @@
 #include "word.h"
 #include "graph.h"
 #include <iostream>
+#include <set>
 using namespace std;
 
 Word* word[MAXN_WORD];
@@ -23,6 +24,8 @@ static void buildGraph(Graph** graph, Graph** noLoopGraph, Word* wd, int cnt) {
 	*noLoopGraph = graph2;
 }
 
+set <string> wordSet;
+
 int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
 	FILE* file;
 	int r = fopen_s(&file, fileName, "r");
@@ -37,12 +40,16 @@ int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
 		else if (c >= 'a' && c <= 'z')
 			s += c;
 		else {
-			if ((int)s.size() > 1)
-				word[++word_count] = new Word(s);
-			s = "";
+			if ((int)s.size() > 1) {
+				if (wordSet.find(s) == wordSet.end()) {
+					word[++word_count] = new Word(s);
+					wordSet.insert(s);
+				}
+				s = "";
+			}
 		}
 	}
-	if (!s.empty()) {
+	if ((int)s.size() > 1 && wordSet.find(s) == wordSet.end()) {
 		word[++word_count] = new Word(s);
 	}
 

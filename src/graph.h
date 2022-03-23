@@ -46,8 +46,8 @@ const int MAXN_POINT = 30;
 
 class Graph {
 private:
-	int first[MAXN_POINT]; // 前向星首边
-	int in_degree[MAXN_POINT]; // 入度
+	int first[MAXN_POINT];
+	int in_degree[MAXN_POINT];
 	vector <Edges*>* edges;
 	int point_cnt, edge_cnt;
 public:

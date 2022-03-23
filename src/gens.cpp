@@ -54,13 +54,15 @@ int gen_chains_all(char* fileName, string* result[]) {
 		printf("Ok we don't have loop!\n");
 	}
 
-	// 初始化
+	//initial
 	chain = new vector<Word*>();
 	chain_count = 0;
-	// 枚举起点
+
+	//start from every point
 	for (int i = 0; i < SET_SIZE; i++) {
 		memset(vist, 0, word_count << 2);
 		dfs_chain(i, inputGraph, 0, result);
 	}
+
 	return chain_count;
 }
