@@ -34,6 +34,9 @@ public:
 	int getEnd() {
 		return end;
 	}
+	int getLength() {
+		return length;
+	}
 	string getStr() {
 		return str;
 	}

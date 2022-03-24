@@ -50,6 +50,10 @@ private:
 	int in_degree[MAXN_POINT];
 	vector <Edges*>* edges;
 	int point_cnt, edge_cnt;
+	// self_loop (no self_loop_graph only)
+	int point_weight[MAXN_POINT];
+	int point_char_weight[MAXN_POINT];
+	int self_edge_first[MAXN_POINT];
 public:
 	Graph(int _point_cnt) {
 		point_cnt = _point_cnt;
@@ -58,6 +62,9 @@ public:
 		edges = new vector<Edges*>();
 		edges->push_back(new Edges(0, 0, 0, 0, NULL));
 		edge_cnt = 0;
+		memset(point_weight, 0, point_cnt << 2);
+		memset(point_char_weight, 0, point_cnt << 2);
+		memset(self_edge_first, 0, point_cnt << 2);
 	}
 	void link(int s, int e, int v, Word * word) {
 		edge_cnt++;
@@ -81,6 +88,9 @@ public:
 	int getEdgeStart(int e) {
 		return (*edges)[e]->getStart();
 	}
+	int getEdgeValue(int e) {
+		return (*edges)[e]->getValue();
+	}
 	Word* getEdgeWord(int e) {
 		return (*edges)[e]->getWord();
 	}
@@ -89,6 +99,21 @@ public:
 	}
 	int getPointCount() {
 		return point_cnt;
+	}
+	void addPointWeight(int s, int v, Word * word) {
+		point_weight[s]++;
+		edge_cnt++;
+		edges->push_back(new Edges(s, s, self_edge_first[s], v, word));
+		self_edge_first[s] = edge_cnt;
+	}
+	int getPointWeight(int x) {
+		return point_weight[x];
+	}
+	int getPointCharWeight(int x) {
+		return point_char_weight[x];
+	}
+	int* getSelfEdgeFirst() {
+		return self_edge_first;
 	}
 };
 

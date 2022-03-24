@@ -10,5 +10,7 @@ using namespace std;
 
 int gen_chains_all(char* fileName, string* result[]);
 int gen_chain_word_unique(char* fileName, string* result[]);
+int gen_chain_word(char* fileName, string* result[], char head, char tail, bool enable_loop);
+int gen_chain_char(char* fileName, string* result[], char head, char tail, bool enable_loop);
 
 #endif
