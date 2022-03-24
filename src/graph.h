@@ -10,18 +10,22 @@ class Edges {
 private:
 	int next;
 	int start, end;
+	// for reducing loop
+	int initStart, initEnd;
 	int v;
 	Word* word;
 public:
 	Edges() {
-		start = end = next = v = 0;
+		start = end = next = v = initStart = initEnd = 0;
 		word = NULL;
 	}
-	Edges(int _start, int _end, int _next, int _v, Word* _word) {
+	Edges(int _start, int _end, int _next, int _v, int _initStart, int _initEnd, Word* _word) {
 		start = _start;
 		end = _end;
 		next = _next;
 		v = _v;
+		initStart = _initStart;
+		initEnd = _initEnd;
 		word = _word;
 	}
 	int getStart() {
@@ -36,7 +40,12 @@ public:
 	int getNext() {
 		return next;
 	}
-
+	int getInitStart() {
+		return initStart;
+	}
+	int getInitEnd() {
+		return initEnd;
+	}
 	Word* getWord() {
 		return word;
 	}
@@ -60,15 +69,15 @@ public:
 		memset(first, 0, point_cnt << 2);
 		memset(in_degree, 0, point_cnt << 2);
 		edges = new vector<Edges*>();
-		edges->push_back(new Edges(0, 0, 0, 0, NULL));
+		edges->push_back(new Edges(0, 0, 0, 0, 0, 0, NULL));
 		edge_cnt = 0;
 		memset(point_weight, 0, point_cnt << 2);
 		memset(point_char_weight, 0, point_cnt << 2);
 		memset(self_edge_first, 0, point_cnt << 2);
 	}
-	void link(int s, int e, int v, Word * word) {
+	void link(int s, int e, int v, int inits, int inite, Word * word) {
 		edge_cnt++;
-		edges->push_back(new Edges(s, e, first[s], v, word));
+		edges->push_back(new Edges(s, e, first[s], v, inits, inite, word));
 		//cout << "link : " << s << " " << e << " " << v << endl;
 		first[s] = edge_cnt;
 		in_degree[e]++;
@@ -81,6 +90,15 @@ public:
 	}
 	vector<Edges*>* getEdges() {
 		return edges;
+	}
+	int getEdgeCnt() {
+		return edge_cnt;
+	}
+	int getEdgeInitStart(int e) {
+		return (*edges)[e]->getInitStart();
+	}
+	int getEdgeInitEnd(int e) {
+		return (*edges)[e]->getInitEnd();
 	}
 	int getEdgeEnd(int e) {
 		return (*edges)[e]->getEnd();
@@ -100,10 +118,10 @@ public:
 	int getPointCount() {
 		return point_cnt;
 	}
-	void addPointWeight(int s, int v, Word * word) {
+	void addPointWeight(int s, int v, int inits, Word * word) {
 		point_weight[s]++;
 		edge_cnt++;
-		edges->push_back(new Edges(s, s, self_edge_first[s], v, word));
+		edges->push_back(new Edges(s, s, self_edge_first[s], v, inits, inits, word));
 		self_edge_first[s] = edge_cnt;
 	}
 	int getPointWeight(int x) {
@@ -120,4 +138,5 @@ public:
 #define SET_SIZE 26
 
 int topoSort(Graph*, int*);
+void getNoLoopGraph(Graph* noSelfLoopGraph, Graph* noLoopGraph, Graph* subGraph[], int *subGraphCnt, int *pointColor[]);
 #endif

@@ -41,3 +41,7 @@ int topoSort(Graph* graph, int* sort) {
 
 	return 0;
 }
+
+void getNoLoopGraph(Graph* noSelfLoopGraph, Graph* noLoopGraph, Graph* subGraph[], int* subGraphCnt, int* pointColor[]){
+	printf("No Loop Graph is building!\n");
+}

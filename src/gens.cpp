@@ -39,8 +39,8 @@ void dfs_chain(int x, Graph* graph, int length, string* result[]) {
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
 		int to = graph->getEdgeEnd(e);
-		if (!vist[to]) {
-			vist[to] = 1;
+		if (!vist[e]) {
+			vist[e] = 1;
 			chain->push_back(graph->getEdgeWord(e));
 			if (length > 0) {
 				chain_count++;
@@ -48,7 +48,7 @@ void dfs_chain(int x, Graph* graph, int length, string* result[]) {
 			}
 			dfs_chain(to, graph, length + 1, result);
 			chain->pop_back();
-			vist[to] = 0;
+			vist[e] = 0;
 		}
 	}
 }
@@ -73,7 +73,7 @@ int gen_chains_all(char* fileName, string* result[]) {
 
 	//start from every point
 	for (int i = 0; i < SET_SIZE; i++) {
-		memset(vist, 0, word_count << 2);
+		memset(vist, 0, (word_count + 1) << 2);
 		dfs_chain(i, inputGraph, 0, result);
 	}
 
@@ -140,9 +140,213 @@ int gen_chain_word_unique(char* fileName, string* result[]) {
 }
 // end job 2
 // job 3
+int max_cnt;
+
+int subGraphMaxDist[MAXN_POINT][MAXN_POINT]; 
+// distance between two point in one sub graph,
+//including value of edges and endpoint, not including start point
+
+void get_sub_graph_self_chain(Graph* graph, int x, vector<Word*> * subChain) {
+	int* first = graph->getSelfEdgeFirst();
+	for (int e = first[x]; e; e = graph->getNext(e)) {
+		subChain->push_back(graph->getEdgeWord(e));
+	}
+}
+
+void get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
+	if (length == 0) {
+		return;
+	}
+	int* first = graph->getFirst();
+	for (int e = first[x]; e; e = graph->getNext(e)) {
+		int to = graph->getEdgeEnd(e);
+		if (!vist[e]) {
+			vist[e] = 1;
+			int to_weight = graph->getPointWeight(to);
+			if (length == subGraphMaxDist[to][end]) {
+				subChain->push_back(graph->getEdgeWord(e));
+				get_sub_graph_self_chain(graph, to, subChain);
+				get_sub_graph_chain_char(graph, to, end, length - 1 - to_weight, subChain);
+			}
+			vist[e] = 0;
+		}
+	}
+}
+
+void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
+	int* first = graph->getFirst();
+	for (int e = first[x]; e; e = graph->getNext(e)) {
+		int to = graph->getEdgeEnd(e);
+		if (!vist[e]) {
+			vist[e] = 1;
+			int to_weight = graph->getPointWeight(to);
+			subGraphMaxDist[start][to] = max(subGraphMaxDist[start][to], length + 1 + to_weight);
+			dfs_sub_graph_max_dist_char(graph, start, to, length + 1 + to_weight);
+			vist[e] = 0;
+		}
+	}
+}
+
+void get_sub_graph_max_dist_char(Graph* subLoopGraph[], int subGraphCnt, int* pointColor[]) {
+	memset(subGraphMaxDist, 255, sizeof(subGraphMaxDist));
+	for (int i = 0; i < subGraphCnt; i++)
+		subGraphMaxDist[i][i] = 0;
+	for (int i = 0; i < subGraphCnt; i++) {
+		for (int j = 0; j < SET_SIZE; j++) {
+			if (*(pointColor[j]) == i) {
+				int edge_cnt = subLoopGraph[i]->getEdgeCnt();
+				int to_weight = subLoopGraph[i]->getPointWeight(j);
+				memset(vist, 0, (edge_cnt + 1) << 2);
+				dfs_sub_graph_max_dist_char(subLoopGraph[i], j, j, 0);
+			}
+		}
+	}
+}
 
 int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) {
-	return 0;
+	// get graph
+	//printf("getting graph...\n");
+	Graph* inputGraph, * noSelfLoopGraph;
+	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	// get loopless graph
+	Graph* noLoopGraph;
+	Graph* subLoopGraph[MAXN_POINT];
+	int subGraphCnt;
+	int* pointColor[MAXN_POINT];
+	getNoLoopGraph(noSelfLoopGraph, noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
+	// get topo order
+	//printf("getting topo order...\n");
+	int topo[MAXN_POINT];
+	int r = topoSort(noLoopGraph, topo);
+	if (r < 0) {
+		printf("Error the graph have loop!\n");
+	}
+	else {
+		printf("Ok we don't have loop!\n");
+	}
+	//get sub graph max dist
+	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
+	// get start points
+	int dp[MAXN_POINT], preEdge[MAXN_POINT], preGraph[MAXN_POINT], prePoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
+	if (head == 0) {
+		memset(dp, 255, sizeof(dp));
+		for (int i = 0; i < SET_SIZE; i++) { // every point is ready in itself sub graph
+			int col = *(pointColor[i]);
+			dp[i] = subLoopGraph[col]->getPointWeight(i);
+		}
+	}
+	else {
+		memset(dp, 255, sizeof(dp));
+		int x = head - 'a';
+		int col = *(pointColor[x]);
+		dp[x] = subLoopGraph[col]->getPointWeight(x);
+	}
+	// dp
+	memset(preEdge, 0, sizeof(preEdge));
+	memset(prePoint, 255, sizeof(preEdge));
+	memset(preGraph, 255, sizeof(preGraph));
+	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
+	int* first = noLoopGraph->getFirst();
+	for (int i = 0; i < subGraphCnt; i++) {
+		int x = topo[i];
+		// inside subGraph
+		int gp[MAXN_POINT], gpPoint[MAXN_POINT];
+		memset(gp, 255, SET_SIZE << 2);
+		memset(gpPoint, 255, SET_SIZE << 2);
+		for (int j = 0; j < SET_SIZE; j++) {
+			if (*(pointColor[j]) == x) {
+				if (dp[j] < 0)
+					continue;
+				for (int k = 0; k < SET_SIZE; j++) {
+					if (*(pointColor[k]) == x) {
+						int to_weight = subLoopGraph[i]->getPointWeight(k);
+						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) { // never use 
+							gp[k] = dp[j] + subGraphMaxDist[j][k];
+							gpPoint[k] = j;
+						}
+					}
+				}
+			}
+		}
+		for (int j = 0; j < SET_SIZE; j++) {
+			if (dp[j] < gp[j]) {
+				dp[j] = gp[j];
+				preGraph[j] = x;
+				prePoint[j] = gpPoint[j];
+			}
+		}
+		// outside graph
+		for (int e = first[x]; e; e = noLoopGraph->getNext(e)) {
+			int inits = noLoopGraph->getEdgeInitStart(e);
+			if (dp[inits] < 0)
+				continue;
+			int inite = noLoopGraph->getEdgeInitEnd(e);
+			int to = noLoopGraph->getEdgeEnd(e);
+			int to_weight = subLoopGraph[to]->getPointWeight(inite);
+			if (dp[inite] < dp[inits] + 1 + to_weight) {
+				dp[inite] = dp[inits] + 1 + to_weight;
+				preGraph[inite] = subGraphCnt;
+				preEdge[inite] = e;
+			}
+		}
+	}
+
+	// get end points
+	int maxa = 0;
+	if (tail == 0) {
+		for (int i = 0; i < SET_SIZE; i++) {
+			if (dp[i] > dp[maxa]) {
+				maxa = i;
+			}
+		}
+	}
+	else {
+		maxa = tail - 'a';
+	}
+
+	if (dp[maxa] <= 1) {
+		return 0;
+	}
+	//initial
+	chain = new vector<Word*>();
+	int length = 0;
+	chain_count = 1;
+
+	int now = maxa;
+	while (preEdge[now] > 0) {
+		if (preGraph[now] == subGraphCnt) {
+			int e = preEdge[now];
+			int now_weight = noLoopGraph->getPointWeight(now);
+			if (now > 0) {
+				int* first = noLoopGraph->getSelfEdgeFirst();
+				for (int e = first[now]; e; e = noLoopGraph->getNext(e)) {
+					chain->push_back(noLoopGraph->getEdgeWord(e));
+				}
+			}
+			int from = noLoopGraph->getEdgeStart(e);
+			chain->push_back(noLoopGraph->getEdgeWord(e));
+			length++;
+			now = from;
+		}
+		else {
+			int from = prePoint[now];
+			int col = *(pointColor[from]);
+			vector<Word*>* subChain = new vector<Word*>();
+			get_sub_graph_chain_char(subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
+			for (int i = 0; i < subChain->size(); i++) {
+				chain->push_back((*subChain)[i]);
+			}
+			now = from;
+		}
+	}
+	if (now > 0) {
+		int* first = noLoopGraph->getSelfEdgeFirst();
+		for (int e = first[now]; e; e = noLoopGraph->getNext(e)) {
+			chain->push_back(noLoopGraph->getEdgeWord(e));
+		}
+	}
+	save_chain_reverse(result, length);
+	return length;
 }
 
 int gen_chain_word_loopless(char* fileName, string* result[], char head, char tail) {
@@ -223,6 +427,12 @@ int gen_chain_word_loopless(char* fileName, string* result[], char head, char ta
 		chain->push_back(noSelfLoopGraph->getEdgeWord(e));
 		length++;
 		now = from;
+	}
+	if (now > 0) {
+		int* first = noSelfLoopGraph->getSelfEdgeFirst();
+		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
+			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+		}
 	}
 	save_chain_reverse(result, length);
 	return length;
@@ -326,6 +536,12 @@ int gen_chain_char_loopless(char* fileName, string* result[], char head, char ta
 		chain->push_back(noSelfLoopGraph->getEdgeWord(e));
 		length++;
 		now = from;
+	}
+	if (now > 0) {
+		int* first = noSelfLoopGraph->getSelfEdgeFirst();
+		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
+			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+		}
 	}
 	save_chain_reverse(result, length);
 	return length;
