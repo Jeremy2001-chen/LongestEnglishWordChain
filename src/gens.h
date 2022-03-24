@@ -9,5 +9,6 @@
 using namespace std;
 
 int gen_chains_all(char* fileName, string* result[]);
+int gen_chain_word_unique(char* fileName, string* result[]);
 
 #endif

@@ -36,5 +36,12 @@ int main(int argc, char *argv[])
     for (int i = 1; i <= tot; i++) {
         cout << (*(result[i])) << endl;
     }
+    printf("ready test 2\n");
+    tot = gen_chain_word_unique(name, result);
+    printf("%d\n", tot);
+    if (tot > 0) {
+        cout << (*(result[1])) << endl;
+    }
+
     return 0;
 }
