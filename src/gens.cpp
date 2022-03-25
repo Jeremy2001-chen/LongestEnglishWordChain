@@ -213,7 +213,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	Graph* subLoopGraph[MAXN_POINT];
 	int subGraphCnt;
 	int* pointColor[MAXN_POINT];
-	getNoLoopGraph(noSelfLoopGraph, noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
+	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
 	//printf("getting topo order...\n");
 	int topo[MAXN_POINT];
