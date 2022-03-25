@@ -54,6 +54,7 @@ private:
 	int point_char_weight[MAXN_POINT];
 	int self_edge_first[MAXN_POINT];
 public:
+	Graph() {}
 	Graph(int _point_cnt) {
 		point_cnt = _point_cnt;
 		memset(first, 0, point_cnt << 2);
@@ -127,5 +128,5 @@ public:
 #define SET_SIZE 26
 
 int topoSort(Graph*, int*);
-void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph[], int *subGraphCnt, int* pointColor[]);
+void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph, int *subGraphCnt, int* pointColor);
 #endif

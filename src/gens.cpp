@@ -178,9 +178,12 @@ void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
 		int to = graph->getEdgeEnd(e);
+		cout << "!!!!! : " << to << endl;
 		if (!vist[e]) {
 			vist[e] = 1;
 			int to_weight = graph->getPointWeight(to);
+			cout << "dfs : " << start << " " << to << " " << to_weight << endl;
+
 			subGraphMaxDist[start][to] = max(subGraphMaxDist[start][to], length + 1 + to_weight);
 			dfs_sub_graph_max_dist_char(graph, start, to, length + 1 + to_weight);
 			vist[e] = 0;
@@ -188,17 +191,18 @@ void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
 	}
 }
 
-void get_sub_graph_max_dist_char(Graph* subLoopGraph[], int subGraphCnt, int* pointColor[]) {
+void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* pointColor) {
 	memset(subGraphMaxDist, 255, sizeof(subGraphMaxDist));
 	for (int i = 0; i < subGraphCnt; i++)
 		subGraphMaxDist[i][i] = 0;
 	for (int i = 0; i < subGraphCnt; i++) {
 		for (int j = 0; j < SET_SIZE; j++) {
-			if (*(pointColor[j]) == i) {
-				int edge_cnt = subLoopGraph[i]->getEdgeCnt();
-				int to_weight = subLoopGraph[i]->getPointWeight(j);
-				memset(vist, 0, (edge_cnt + 1) << 2);
-				dfs_sub_graph_max_dist_char(subLoopGraph[i], j, j, 0);
+			if (pointColor[j] == i) {
+				int edge_cnt = subLoopGraph[i].getEdgeCnt();
+				int to_weight = subLoopGraph[i].getPointWeight(j);
+				cout << &subLoopGraph[i] << " " << j << " " << i << " " << edge_cnt << endl;
+				memset(vist, 0, SET_SIZE << 2);
+				dfs_sub_graph_max_dist_char(&subLoopGraph[i], j, j, 0);
 			}
 		}
 	}
@@ -211,12 +215,14 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
 	// get loopless graph
 	Graph* noLoopGraph;
-	Graph* subLoopGraph[MAXN_POINT];
+	Graph subLoopGraph[MAXN_POINT];
 	int subGraphCnt;
-	int* pointColor[MAXN_POINT];
+	int pointColor[MAXN_POINT];
 	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
-	//printf("getting topo order...\n");
+	cout << noLoopGraph->getPointCount() << endl;
+	printf("getting topo order...\n");
+	//printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
 	int r = topoSort(noLoopGraph, topo);
 	if (r < 0) {
@@ -250,19 +256,25 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	memset(preGraph, 255, sizeof(preGraph));
 	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
 	int* first = noLoopGraph->getFirst();
+	//printf("Now check count: %d\n", subGraphCnt);
+	for (int i = 0; i < SET_SIZE; i++)
+		cout << pointColor[i] << " ";
+	cout << endl;
 	for (int i = 0; i < subGraphCnt; i++) {
 		int x = topo[i];
+		//cout << "Now in block : " << x << endl;
 		// inside subGraph
 		int gp[MAXN_POINT], gpPoint[MAXN_POINT];
 		memset(gp, 255, SET_SIZE << 2);
 		memset(gpPoint, 255, SET_SIZE << 2);
 		for (int j = 0; j < SET_SIZE; j++) {
-			if (*(pointColor[j]) == x) {
+			if (pointColor[j] == x) {
 				if (dp[j] < 0)
 					continue;
-				for (int k = 0; k < SET_SIZE; j++) {
-					if (*(pointColor[k]) == x) {
-						int to_weight = subLoopGraph[i]->getPointWeight(k);
+				cout << j << "wait: " << subGraphMaxDist[12][13] << endl;
+				for (int k = 0; k < SET_SIZE; k++) {
+					if (pointColor[k] == x) {
+						int to_weight = subLoopGraph[i].getPointWeight(k);
 						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) { // never use 
 							gp[k] = dp[j] + subGraphMaxDist[j][k];
 							gpPoint[k] = j;
@@ -332,9 +344,9 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 		}
 		else {
 			int from = prePoint[now];
-			int col = *(pointColor[from]);
+			int col = pointColor[from];
 			vector<Word*>* subChain = new vector<Word*>();
-			get_sub_graph_chain_char(subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
+			get_sub_graph_chain_char(&subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
 			for (int i = 0; i < subChain->size(); i++) {
 				chain->push_back((*subChain)[i]);
 			}

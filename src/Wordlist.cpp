@@ -46,22 +46,22 @@ int main(int argc, char *argv[])
     
     printf("\n\n\n\n\n");
     printf("ready test 3\n");
-    tot = gen_chain_word(name, result, 0, 0, false);
+    tot = gen_chain_word(name, result, 0, 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 'm', 'x', false);
+    tot = gen_chain_word(name, result, 'm', 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 'm', 0, false);
+    tot = gen_chain_word(name, result, 'm', 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 0, 'x', false);
+    tot = gen_chain_word(name, result, 0, 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
@@ -71,22 +71,22 @@ int main(int argc, char *argv[])
     printf("\n\n\n\n\n");
     printf("\n\n\n\n\n");
     printf("ready test 4\n");
-    tot = gen_chain_char(name, result, 0, 0, false);
+    tot = gen_chain_char(name, result, 0, 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 'm', 'x', false);
+    tot = gen_chain_char(name, result, 'm', 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 'm', 0, false);
+    tot = gen_chain_char(name, result, 'm', 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 0, 'x', false);
+    tot = gen_chain_char(name, result, 0, 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
