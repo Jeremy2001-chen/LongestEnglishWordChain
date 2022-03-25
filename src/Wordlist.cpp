@@ -30,18 +30,21 @@ int main(int argc, char *argv[])
     else {
         printf("Ok we don't have loop!\n");
     }*/
+    printf("Running.......\n");
     printf("ready test 1\n");
     int tot = gen_chains_all(name, result);
     printf("%d\n", tot);
     for (int i = 1; i <= tot; i++) {
         cout << (*(result[i])) << endl;
     }
+    printf("\n\n\n\n\n");
     printf("ready test 2\n");
     tot = gen_chain_word_unique(name, result);
     printf("%d\n", tot);
-    if (tot > 0) {
+    if (tot > 0)
         cout << (*(result[1])) << endl;
-    }
+    
+    printf("\n\n\n\n\n");
     printf("ready test 3\n");
     tot = gen_chain_word(name, result, 0, 0, false);
     printf("%d\n", tot);
@@ -64,6 +67,9 @@ int main(int argc, char *argv[])
         cout << (*(result[1])) << endl;
     }
 
+    printf("\n\n\n\n\n");
+    printf("\n\n\n\n\n");
+    printf("\n\n\n\n\n");
     printf("ready test 4\n");
     tot = gen_chain_char(name, result, 0, 0, false);
     printf("%d\n", tot);

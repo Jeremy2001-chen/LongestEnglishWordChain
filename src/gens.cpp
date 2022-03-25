@@ -86,7 +86,7 @@ int gen_chains_all(char* fileName, string* result[]) {
 
 int gen_chain_word_unique(char* fileName, string* result[]) {
 	// get graph
-	Graph* inputGraph, * noSelfLoopGraph;
+	Graph* inputGraph, *noSelfLoopGraph;
 	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
 	// get topo order
 	int topo[MAXN_POINT];
@@ -228,22 +228,24 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
 	// get start points
 	int dp[MAXN_POINT], preEdge[MAXN_POINT], preGraph[MAXN_POINT], prePoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
+	int weight[MAXN_POINT]; //record the self loop weight
+	for (int i = 0; i < SET_SIZE; i++) {
+		weight[i] = noSelfLoopGraph->getPointWeight(i);
+	}
+	memset(dp, 255, sizeof(dp));
+	
 	if (head == 0) {
-		memset(dp, 255, sizeof(dp));
 		for (int i = 0; i < SET_SIZE; i++) { // every point is ready in itself sub graph
-			int col = *(pointColor[i]);
-			dp[i] = subLoopGraph[col]->getPointWeight(i);
+			dp[i] = weight[i];
 		}
 	}
 	else {
-		memset(dp, 255, sizeof(dp));
 		int x = head - 'a';
-		int col = *(pointColor[x]);
-		dp[x] = subLoopGraph[col]->getPointWeight(x);
+		dp[x] = weight[x];
 	}
 	// dp
 	memset(preEdge, 0, sizeof(preEdge));
-	memset(prePoint, 255, sizeof(preEdge));
+	memset(prePoint, 255, sizeof(prePoint));
 	memset(preGraph, 255, sizeof(preGraph));
 	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
 	int* first = noLoopGraph->getFirst();
@@ -277,16 +279,15 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 		}
 		// outside graph
 		for (int e = first[x]; e; e = noLoopGraph->getNext(e)) {
-			int inits = noLoopGraph->getEdgeInitStart(e);
-			if (dp[inits] < 0)
+			Word* tmp = noLoopGraph->getEdgeWord(e);
+			int st = tmp->getBegin(), ed = tmp->getEnd();
+			if (dp[st] < 0)
 				continue;
-			int inite = noLoopGraph->getEdgeInitEnd(e);
-			int to = noLoopGraph->getEdgeEnd(e);
-			int to_weight = subLoopGraph[to]->getPointWeight(inite);
-			if (dp[inite] < dp[inits] + 1 + to_weight) {
-				dp[inite] = dp[inits] + 1 + to_weight;
-				preGraph[inite] = subGraphCnt;
-				preEdge[inite] = e;
+			int to_weight = noLoopGraph->getPointWeight(ed);
+			if (dp[ed] < dp[st] + 1 + to_weight) {
+				dp[ed] = dp[st] + 1 + to_weight;
+				preGraph[ed] = subGraphCnt;
+				preEdge[ed] = e;
 			}
 		}
 	}
@@ -305,7 +306,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	}
 
 	if (dp[maxa] <= 1) {
-		return 0;
+		return 0; //todo
 	}
 	//initial
 	chain = new vector<Word*>();

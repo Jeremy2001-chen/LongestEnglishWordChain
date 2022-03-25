@@ -16,11 +16,11 @@ static void buildGraph(Graph** graph, Graph** noLoopGraph, Word* wd, int cnt) {
 	graph2 = new Graph(SET_SIZE);
 	for (int i = 1; i <= cnt; i++) {
 		int s = word[i]->getBegin(), t = word[i]->getEnd(), len = word[i]->getLength();
-		graph1->link(s, t, len, s, t, word[i]);
+		graph1->link(s, t, len, word[i]);
 		if (s != t) {
-			graph2->link(s, t, len, s, t, word[i]);
+			graph2->link(s, t, len, word[i]);
 		} else {
-			graph2->addPointWeight(s, len, s, word[i]);
+			graph2->addPointWeight(s, len, word[i]);
 		}
 	}
 	*graph = graph1;

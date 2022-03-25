@@ -97,9 +97,10 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 				crossGraph->link(sccColor[i], sccColor[to], noSelfLoopGraph->getEdgeValue(e), noSelfLoopGraph->getEdgeWord(e));
 			}
 			else {
-				(*subGraph)[sccColor[i]]->link(i, to, noSelfLoopGraph->getEdgeValue(e), noSelfLoopGraph->getEdgeWord(e));
+				(*subGraph)[sccColor[i]].link(i, to, noSelfLoopGraph->getEdgeValue(e), noSelfLoopGraph->getEdgeWord(e));
 			}
 		}
+		(*subGraph)[sccColor[i]].setPointWeights(i, noSelfLoopGraph->getPointWeight(i), noSelfLoopGraph->getPointCharWeight(i));
 	}
 	noLoopGraph = &crossGraph;
 	(*subGraphCnt) = blockNum;
