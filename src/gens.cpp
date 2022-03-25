@@ -93,6 +93,7 @@ int gen_chain_word_unique(char* fileName, string* result[]) {
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		printf("Error the graph have loop!\n");
+		return r;
 	}
 	else {
 		printf("Ok we don't have loop!\n");
@@ -361,6 +362,7 @@ int gen_chain_word_loopless(char* fileName, string* result[], char head, char ta
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		printf("Error the graph have loop!\n");
+		return r;
 	}
 	else {
 		printf("Ok we don't have loop!\n");
@@ -464,6 +466,7 @@ int gen_chain_char_loopless(char* fileName, string* result[], char head, char ta
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		printf("Error the graph have loop!\n");
+		return r;
 	}
 	else {
 		printf("Ok we don't have loop!\n");
