@@ -93,10 +93,8 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 	}
 	for (int i = 0; i < blockNum; i++) {
 		subGraph[i] = Graph(originPointCnt);
-		cout << &subGraph[i] << " " << subGraph[i].getPointCount() << endl;
 	}
 	Graph* crossGraph = new Graph(blockNum);
-	cout << "New GGGGGGGGGGGGGGGGGGGGG" << endl;
 	for (int i = 0; i < originPointCnt; i++) {
 		for (int e = noSelfLoopGraph->getFirst()[i]; e; e = noSelfLoopGraph->getNext(e)) {
 			int to = noSelfLoopGraph->getEdgeEnd(e);

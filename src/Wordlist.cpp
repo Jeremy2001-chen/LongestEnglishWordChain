@@ -91,6 +91,5 @@ int main(int argc, char *argv[])
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-
     return 0;
 }
