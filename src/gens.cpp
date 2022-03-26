@@ -157,7 +157,7 @@ void get_sub_graph_self_chain(Graph* graph, int x, vector<Word*> * subChain) {
 Word* wordList[20202];
 int pointVistCnt[MAXN_POINT];
 int wordCnt = 0;
-bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
+bool get_sub_graph_chain_word(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
 	//cout << "x = " << x << " length = " << length  << " end  = " << end << endl;
 	if (length == 0) {
 		for (int i = 1; i <= wordCnt; i++) {
@@ -188,7 +188,7 @@ bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<W
 				}
 				// cout << "to = " << to << " to_weight = " << to_weight << endl;
 			}
-			if (get_sub_graph_chain_char(graph, to, end, length - 1 - to_weight, subChain)) {
+			if (get_sub_graph_chain_word(graph, to, end, length - 1 - to_weight, subChain)) {
 				return 1;
 			}
 			wordCnt = lastCnt;
@@ -199,7 +199,7 @@ bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<W
 	return 0;
 }
 
-void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
+void dfs_sub_graph_max_dist_word(Graph* graph, int start, int x, int length) {
 	pointVistCnt[x]++;
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
@@ -215,14 +215,14 @@ void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
 			}
 
 			subGraphMaxDist[start][to] = max(subGraphMaxDist[start][to], length + 1 + to_weight);
-			dfs_sub_graph_max_dist_char(graph, start, to, length + 1 + to_weight);
+			dfs_sub_graph_max_dist_word(graph, start, to, length + 1 + to_weight);
 			vist[e] = 0;
 		}
 	}
 	pointVistCnt[x]--;
 }
 
-void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* pointColor) {
+void get_sub_graph_max_dist_word(Graph* subLoopGraph, int subGraphCnt, int* pointColor) {
 	memset(subGraphMaxDist, 255, sizeof(subGraphMaxDist));
 	for (int i = 0; i < subGraphCnt; i++)
 		subGraphMaxDist[i][i] = 0;
@@ -233,7 +233,7 @@ void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* poin
 				int to_weight = subLoopGraph[i].getPointWeight(j);
 				memset(vist, 0, SET_SIZE << 2);
 				memset(pointVistCnt, 0, SET_SIZE << 2);
-				dfs_sub_graph_max_dist_char(&subLoopGraph[i], j, j, 0);
+				dfs_sub_graph_max_dist_word(&subLoopGraph[i], j, j, 0);
 			}
 		}
 	}
@@ -270,7 +270,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 		printf("Ok we don't have loop!\n");
 	}
 	//get sub graph max dist
-	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
+	get_sub_graph_max_dist_word(subLoopGraph, subGraphCnt, pointColor);
 	// get start points
 	int dp[MAXN_POINT], preEdge[MAXN_POINT], preSCCPoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
 	int weight[MAXN_POINT]; //record the self loop weight
@@ -383,7 +383,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 			wordCnt = 0;
 			memset(vist, 0, sizeof(vist));
 			memset(pointVistCnt, 0, SET_SIZE << 2);
-			int r = get_sub_graph_chain_char(&subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
+			int r = get_sub_graph_chain_word(&subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
 			if (!r) {
 				//system("pause");
 				exit(1);
