@@ -5,6 +5,7 @@
 #include "word.h"
 #include "graph.h"
 #include "gens.h"
+#include "parameter.h"
 
 using namespace std;
 
@@ -14,12 +15,46 @@ string* result[MAXN];
 
 int main(int argc, char *argv[])
 {
+    int problemType, start, end;
+    bool loop_enable;
     char* name;
-    name = (char*)malloc(4);
-    while (argc-- > 0) {
-        name = *argv++;
-        printf("argc:%d, argv:%s\n", argc, name);
+    int r = parameterExtract(argv, argc, problemType, loop_enable, start, end, &name);
+    if (r < 0) {
+        exit(1);
     }
+    int tot = gen_chain_char(name, result, 0, 0, true);
+    cout << tot << endl;
+    return 0;
+    switch (problemType) {
+    case WORD_CHAIN_COUNT_PROBLEM:
+        tot = gen_chains_all(name, result);
+        cout << tot << endl;
+        for (int i = 1; i <= tot; i++) {
+            cout << (*(result[i])) << endl;
+        }
+        break;
+    case FIRST_CHAR_NOT_SAME_PROBLEM:
+        tot = gen_chain_word_unique(name, result);
+        cout << tot << endl;
+        if (tot > 0)
+            cout << (*(result[1])) << endl;
+        break;
+    case WORD_CHAIN_MAX_WORD_PROBLEM:
+        tot = gen_chain_word(name, result, start, end, loop_enable);
+        cout << tot << endl;
+        if (tot > 0) {
+            cout << (*(result[1])) << endl;
+        }
+        break;
+    case WORD_CHAIN_MAX_CHAR_PROBLEM:
+        tot = gen_chain_char(name, result, start, end, loop_enable);
+        cout << tot << endl;
+        if (tot > 0) {
+            cout << (*(result[1])) << endl;
+        }
+        break;
+    }
+
     /*Graph* inputGraph, * noSelfLoopGraph;
     handleInput(name, &inputGraph, &noSelfLoopGraph);
     int topo[MAXN_POINT];
@@ -30,6 +65,7 @@ int main(int argc, char *argv[])
     else {
         printf("Ok we don't have loop!\n");
     }*/
+    /*
     printf("Running.......\n");
     printf("ready test 1\n");
     int tot = gen_chains_all(name, result);
@@ -51,17 +87,17 @@ int main(int argc, char *argv[])
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 'a', 'b', true);
+    tot = gen_chain_word(name, result, 'm', 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 'e', 0, true);
+    tot = gen_chain_word(name, result, 'm', 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_word(name, result, 0, 't', true);
+    tot = gen_chain_word(name, result, 0, 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
@@ -76,21 +112,21 @@ int main(int argc, char *argv[])
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 'a', 'b', true);
+    tot = gen_chain_char(name, result, 'm', 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 'a', 0, true);
+    tot = gen_chain_char(name, result, 'm', 0, true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    tot = gen_chain_char(name, result, 0, 'b', true);
+    tot = gen_chain_char(name, result, 0, 'x', true);
     printf("%d\n", tot);
     if (tot > 0) {
         cout << (*(result[1])) << endl;
     }
-    system("pause");
+    */
     return 0;
 }

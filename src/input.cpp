@@ -50,8 +50,8 @@ int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
 					word[++word_count] = new Word(s);
 					wordSet.insert(s);
 				}
-				s = "";
 			}
+			s = "";
 		}
 	}
 	if ((int)s.size() > 1 && wordSet.find(s) == wordSet.end()) {
