@@ -30,11 +30,12 @@ int topoSort(Graph* graph, int* sort) {
 	}
 
 	int tot = graph->getPointCount();
+	/*
 	for (int i = 0; i < head; ++i)
 		cout << sort[i] << " ";
 	cout << endl;
 	cout << head << " " << tail << " " << tot << endl;
-
+	*/
 	if (tail != tot) {
 		return -HAVE_LOOP;
 	}
@@ -87,7 +88,7 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 			tarjan(noSelfLoopGraph, i);
 		}
 	}
-	cout << originPointCnt << endl;
+	//cout << originPointCnt << endl;
 	for (int i = 0; i < originPointCnt; i++) {
 		pointColor[i] = sccColor[i];
 	}
@@ -99,15 +100,24 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 		for (int e = noSelfLoopGraph->getFirst()[i]; e; e = noSelfLoopGraph->getNext(e)) {
 			int to = noSelfLoopGraph->getEdgeEnd(e);
 			if (sccColor[i] != sccColor[to]) {
-				cout << "other link " << sccColor[i] << " " << sccColor[to] << endl;
+				//cout << "other link " << sccColor[i] << " " << sccColor[to] << endl;
 				crossGraph->link(sccColor[i], sccColor[to], noSelfLoopGraph->getEdgeValue(e), noSelfLoopGraph->getEdgeWord(e));
 			}
 			else {
-				cout << "sub link " << sccColor[i] << " " << i << " " << to << endl;
+				//cout << "sub link " << sccColor[i] << " " << i << " " << to << endl;
 				subGraph[sccColor[i]].link(i, to, noSelfLoopGraph->getEdgeValue(e), noSelfLoopGraph->getEdgeWord(e));
 			}
 		}
-		subGraph[sccColor[i]].setPointWeights(i, noSelfLoopGraph->getPointWeight(i), noSelfLoopGraph->getPointCharWeight(i));
+		//subGraph[sccColor[i]].setPointWeights(i, noSelfLoopGraph->getPointWeight(i), noSelfLoopGraph->getPointCharWeight(i));
+	}
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* selfFirst = noSelfLoopGraph->getSelfEdgeFirst();
+		for (int e = selfFirst[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int len = noSelfLoopGraph->getEdgeValue(e);
+			Word* word = noSelfLoopGraph->getEdgeWord(e);
+			subGraph[sccColor[i]].addPointWeight(s, len, word);
+		}
 	}
 	(* noLoopGraph) = crossGraph;
 	(*subGraphCnt) = blockNum;

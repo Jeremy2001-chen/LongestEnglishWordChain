@@ -155,26 +155,38 @@ void get_sub_graph_self_chain(Graph* graph, int x, vector<Word*> * subChain) {
 }
 
 Word* wordList[20202];
+int pointVistCnt[MAXN_POINT];
 int wordCnt = 0;
 bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
+	//cout << "x = " << x << " length = " << length  << " end  = " << end << endl;
 	if (length == 0) {
-		cout << (*subChain).size() << " " << wordCnt << endl;
 		for (int i = 1; i <= wordCnt; i++) {
 			subChain->push_back(wordList[i]);
 		}
-		cout << (*subChain).size() << " " << wordCnt << endl;
+		/*for (int i = 1; i <= wordCnt; i++)
+			cout << wordList[i]->getStr() << " ";
+		cout << endl;*/
 		return 1;
 	}
+	pointVistCnt[x]++;
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
 		int to = graph->getEdgeEnd(e);
 		if (!vist[e]) {
 			vist[e] = 1;
-			int to_weight = graph->getPointWeight(to);
-			int* selfFirst = graph->getSelfEdgeFirst();
 			int lastCnt = wordCnt;
-			for (int e = first[x]; e; e = graph->getNext(e)) {
-				wordList[++wordCnt] = graph->getEdgeWord(e);
+			wordList[++wordCnt] = graph->getEdgeWord(e);
+			int to_weight = 0;
+			if (pointVistCnt[to] > 0) {
+				to_weight = 0;
+			} 
+			else { 
+				to_weight = graph->getPointWeight(to); 
+				int* selfFirst = graph->getSelfEdgeFirst();
+				for (int e = selfFirst[to]; e; e = graph->getNext(e)) {
+					wordList[++wordCnt] = graph->getEdgeWord(e);
+				}
+				// cout << "to = " << to << " to_weight = " << to_weight << endl;
 			}
 			if (get_sub_graph_chain_char(graph, to, end, length - 1 - to_weight, subChain)) {
 				return 1;
@@ -183,24 +195,31 @@ bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<W
 			vist[e] = 0;
 		}
 	}
+	pointVistCnt[x]--;
 	return 0;
 }
 
 void dfs_sub_graph_max_dist_char(Graph* graph, int start, int x, int length) {
+	pointVistCnt[x]++;
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
 		int to = graph->getEdgeEnd(e);
-		cout << "!!!!! : " << to << endl;
 		if (!vist[e]) {
 			vist[e] = 1;
-			int to_weight = graph->getPointWeight(to);
-			cout << "dfs : " << start << " " << to << " " << to_weight << endl;
+			int to_weight = 0;
+			if (pointVistCnt[to] > 0) {
+				to_weight = 0;
+			}
+			else {
+				to_weight = graph->getPointWeight(to);
+			}
 
 			subGraphMaxDist[start][to] = max(subGraphMaxDist[start][to], length + 1 + to_weight);
 			dfs_sub_graph_max_dist_char(graph, start, to, length + 1 + to_weight);
 			vist[e] = 0;
 		}
 	}
+	pointVistCnt[x]--;
 }
 
 void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* pointColor) {
@@ -213,10 +232,19 @@ void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* poin
 				int edge_cnt = subLoopGraph[i].getEdgeCnt();
 				int to_weight = subLoopGraph[i].getPointWeight(j);
 				memset(vist, 0, SET_SIZE << 2);
+				memset(pointVistCnt, 0, SET_SIZE << 2);
 				dfs_sub_graph_max_dist_char(&subLoopGraph[i], j, j, 0);
 			}
 		}
 	}
+	/*
+	for (int i = 0; i < SET_SIZE; i++) {
+		for (int j = 0; j < SET_SIZE; j++) {
+			cout << subGraphMaxDist[i][j] << " ";
+		}
+		cout << endl;
+	}
+	*/
 }
 
 int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) {
@@ -231,7 +259,6 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	int pointColor[MAXN_POINT];
 	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
-	cout << noLoopGraph->getPointCount() << endl;
 	printf("getting topo order...\n");
 	//printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
@@ -259,6 +286,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	}
 	else {
 		int x = head - 'a';
+		//cout << head << " " << x << endl;
 		dp[x] = weight[x];
 	}
 	// dp
@@ -268,9 +296,10 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
 	int* first = noLoopGraph->getFirst();
 	//printf("Now check count: %d\n", subGraphCnt);
-	//for (int i = 0; i < SET_SIZE; i++)
-	//	cout << pointColor[i] << " ";
-	//cout << endl;
+	/*for (int i = 0; i < SET_SIZE; i++)
+		cout << dp[i] << " ";
+	cout << endl;
+	*/
 	for (int i = 0; i < subGraphCnt; i++) {
 		int x = topo[i];
 		//cout << "Now in block : " << x << endl;
@@ -285,7 +314,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 				for (int k = 0; k < SET_SIZE; k++) {
 					if (pointColor[k] == x) {
 						int to_weight = subLoopGraph[i].getPointWeight(k);
-						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) { // never use 
+						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) { 
 							gp[k] = dp[j] + subGraphMaxDist[j][k];
 							gpPoint[k] = j;
 						}
@@ -313,6 +342,11 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 		}
 	}
 
+	
+	for (int i = 0; i < SET_SIZE; i++)
+		cout << dp[i] << " ";
+	cout << endl;
+
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -329,19 +363,18 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	if (dp[maxa] <= 1) {
 		return 0; //todo
 	}
+
+	cout << "Max len: " << dp[maxa] << endl;
+
 	//initial
 	chain = new vector<Word*>();
 	int length = 0;
 	chain_count = 1;
 
-	cout << "Max len: " << dp[maxa] << endl;
-	for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
 	int now = maxa;
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
-		cout << now << " " << length << endl;
+		cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
 		if (!inSCC && preSCCPoint[now] >= 0) {
 			inSCC = true;
 			int from = preSCCPoint[now];
@@ -349,11 +382,13 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 			vector<Word*>* subChain = new vector<Word*>();
 			wordCnt = 0;
 			memset(vist, 0, sizeof(vist));
+			memset(pointVistCnt, 0, SET_SIZE << 2);
 			int r = get_sub_graph_chain_char(&subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
 			if (!r) {
+				//system("pause");
 				exit(1);
 			}
-			cout << (*subChain).size() << endl;
+			//cout << (*subChain).size() << endl;
 			for (int i = (*subChain).size()-1 ; i >= 0; i--) {
 				chain->push_back((*subChain)[i]);
 				length++;
@@ -370,17 +405,20 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 					length++;
 				}
 			}
-			int from = noLoopGraph->getEdgeStart(e);
+			Word* tmp = noLoopGraph->getEdgeWord(e);
+			int from = tmp->getBegin();
+			cout << " from = " << from << endl;
 			chain->push_back(noLoopGraph->getEdgeWord(e));
 			length++;
 			now = from;
 		}
-		cout << "Now: " << now << endl;
+		//cout << "Now: " << now << endl;
 	}
-	if (now > 0) {
-		int* first = noLoopGraph->getSelfEdgeFirst();
-		for (int e = first[now]; e; e = noLoopGraph->getNext(e)) {
-			chain->push_back(noLoopGraph->getEdgeWord(e));
+	if (subLoopGraph[pointColor[now]].getPointWeight(now) > 0) {
+		int* first = subLoopGraph[pointColor[now]].getSelfEdgeFirst();
+		for (int e = first[now]; e; e = subLoopGraph[pointColor[now]].getNext(e)) {
+			chain->push_back(subLoopGraph[pointColor[now]].getEdgeWord(e));
+			length++;
 		}
 	}
 	save_chain_reverse(result, length);
