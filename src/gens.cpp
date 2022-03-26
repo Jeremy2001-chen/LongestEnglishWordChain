@@ -342,11 +342,11 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 		}
 	}
 
-	
+	/*
 	for (int i = 0; i < SET_SIZE; i++)
 		cout << dp[i] << " ";
 	cout << endl;
-
+	*/
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -374,7 +374,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	int now = maxa;
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
-		cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
+		// cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
 		if (!inSCC && preSCCPoint[now] >= 0) {
 			inSCC = true;
 			int from = preSCCPoint[now];
@@ -407,7 +407,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 			}
 			Word* tmp = noLoopGraph->getEdgeWord(e);
 			int from = tmp->getBegin();
-			cout << " from = " << from << endl;
+			// cout << " from = " << from << endl;
 			chain->push_back(noLoopGraph->getEdgeWord(e));
 			length++;
 			now = from;
@@ -712,11 +712,11 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 		}
 	}
 
-
+	/*
 	for (int i = 0; i < SET_SIZE; i++)
 		cout << dp[i] << " ";
 	cout << endl;
-
+	*/
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -744,7 +744,7 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 	int now = maxa;
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
-		cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
+		// cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
 		if (!inSCC && preSCCPoint[now] >= 0) {
 			inSCC = true;
 			int from = preSCCPoint[now];
@@ -778,7 +778,7 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 			}
 			Word* tmp = noLoopGraph->getEdgeWord(e);
 			int from = tmp->getBegin();
-			cout << " from = " << from << endl;
+			// cout << " from = " << from << endl;
 			chain->push_back(noLoopGraph->getEdgeWord(e));
 			length++;
 			now = from;

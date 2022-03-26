@@ -71,7 +71,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
                 start = argv[i][0];
             }
             else {
-                end = argv[i][1];
+                end = argv[i][0];
             }
             break;
         case SET_ALLOC_LOOP:

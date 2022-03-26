@@ -15,8 +15,8 @@ string* result[MAXN];
 
 int main(int argc, char *argv[])
 {
-    int problemType, start, end;
-    bool loop_enable;
+    int problemType, start = 0, end = 0;
+    bool loop_enable = false;
     char* name;
     int r = parameterExtract(argv, argc, problemType, loop_enable, start, end, &name);
     if (r < 0) {
