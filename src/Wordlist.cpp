@@ -22,8 +22,11 @@ int main(int argc, char *argv[])
     if (r < 0) {
         exit(1);
     }
-    int tot = gen_chain_char(name, result, 0, 0, true);
+    int tot = gen_chain_word(name, result, 0, 0, true);
     cout << tot << endl;
+    if (tot > 0) {
+        cout << (*(result[1])) << endl;
+    }
     return 0;
     switch (problemType) {
     case WORD_CHAIN_COUNT_PROBLEM:
