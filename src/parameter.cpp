@@ -22,6 +22,22 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     int r;
     start = 0; end = 0;
     for (int i = 1; i < argc; i++) {
+        if (checkFilePath(argv[i])) {
+            if (pathFind) {
+                cout << "You have done multi file path!" << endl;
+                return -MULTI_FILE_PATH;
+            }
+            pathFind = true;
+            int len = strlen(argv[i]);
+            char* path = (char*)malloc(len + 1);
+            for (int j = 0; j < len; j++) {
+                path[j] = argv[i][j];
+            }
+            path[len] = '\0';
+            (*name) = path;
+            i++;
+            continue;
+        }
         if (strlen(argv[i]) != 2 || argv[i][0] != '-') {
             cout << "Parameter error!" << endl;
             return -PARAMETER_NOT_EXISTS;
@@ -29,16 +45,16 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         switch (argv[i][1]) {
         case CALCULATE_CHAIN_COUNT_PARAMETER:
             problemType = WORD_CHAIN_COUNT_PROBLEM;
-            goto checkFilePath;
+            break;
         case CALCULATE_MAX_WORD_COUNT_PARAMETER:
             problemType = WORD_CHAIN_MAX_WORD_PROBLEM;
-            goto checkFilePath;
+            break;
         case CALCULATE_FIRST_CHAR_NOT_SAME_PARAMETER:
             problemType = FIRST_CHAR_NOT_SAME_PROBLEM;
-            goto checkFilePath;
+            break;
         case CALCULATE_MAX_CHAR_COUNT_PARAMETER:
             problemType = WORD_CHAIN_MAX_CHAR_PROBLEM;
-            goto checkFilePath;
+            break;
         case SET_FIRST_CHAR:
         case SET_LAST_CHAR:
             type = argv[i][1];
@@ -65,35 +81,6 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             cout << "Parameter form not correct!" << endl;
             return -PARAMETER_FORM_ERROR;
         }
-        goto checkFilePathEnd;
-
-    checkFilePath:
-        if (i == argc - 1) {
-            cout << "Parameter forget the file path!" << endl;
-            return -NO_FILE_PATH;
-        }
-        if (pathFind) {
-            cout << "You have done multi-work!" << endl;
-            return -MULTI_WORK;
-        }
-        i++;
-        if (checkFilePath(argv[i])) {
-            pathFind = true;
-            int len = strlen(argv[i]);
-            char* path = (char*)malloc(len + 1);
-            for (int j = 0; j < len; j++) {
-                path[j] = argv[i][j];
-            }
-            path[len] = '\0';
-            (*name) = path;
-        }
-        else {
-            cout << "File path not correct!" << endl;
-            return -FILE_PATH_FORM_ERROR;
-        }
-    checkFilePathEnd:
-        ;
-
     }
     return 0;
 }
