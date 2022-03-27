@@ -139,6 +139,7 @@ public:
 
 #define SET_SIZE 26
 
+void buildGraph(Graph** graph, Graph** noLoopGraph, char* word[], int cnt);
 int topoSort(Graph*, int*);
 void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph, int *subGraphCnt, int* pointColor);
 #endif

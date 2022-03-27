@@ -2,6 +2,6 @@
 #define _INPUT_H_
 #include "graph.h"
 
-int handleInput(char*, Graph**, Graph**);
+int handleInput(char* fileName, char* word[], int& len);
 
 #endif

@@ -14,28 +14,54 @@ vector<Word*>* chain;
 
 int vist[MAXN_WORD];
 
-void save_chain(string* result[], int length) {
-	string* now = new string();
+void save_chain(char* result[], int length) {
+	int totLen = 0;
 	for (int i = 0; i < length; i++) {
-		(*now) += (*chain)[i]->getStr();
-		(*now) += " ";
+		totLen += strlen((*chain)[i]->getStr());
 	}
-	result[chain_count] = now;
+	char* now = (char*)malloc(static_cast<size_t>(totLen + length));
+	if (now != NULL) {
+		char* str = now;
+		for (int i = 0; i < length; i++) {
+			char* ch = (*chain)[i]->getStr();
+			for (char* c = ch; *c; c++) {
+				(*str++) = (*c);
+			}
+			if (i != length - 1) {
+				(*str++) = ' ';
+			}
+		}
+		(*str) = '\0';
+		result[chain_count] = now;
+	}
 }
 
-void save_chain_reverse(string* result[], int length) {
-	string* now = new string();
-	for (int i = length - 1; i >= 0; i--) {
-		(*now) += (*chain)[i]->getStr();
-		(*now) += " ";
+void save_chain_reverse(char* result[], int length) {
+	int totLen = 0;
+	for (int i = length-1; i >= 0; i--) {
+		totLen += strlen((*chain)[i]->getStr());
 	}
-	result[chain_count] = now;
+	char* now = (char*)malloc(static_cast<size_t>(totLen + length));
+	if (now != NULL) {
+		char* str = now;
+		for (int i = length-1; i >= 0; i--) {
+			char* ch = (*chain)[i]->getStr();
+			for (char* c = ch; *c; c++) {
+				(*str++) = (*c);
+			}
+			if (i != 0) {
+				(*str++) = ' ';
+			}
+		}
+		(*str) = '\0';
+		result[chain_count] = now;
+	}
 }
 
 // job 1
 
 
-void dfs_chain(int x, Graph* graph, int length, string* result[]) {
+void dfs_chain(int x, Graph* graph, int length, char* result[]) {
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
 		int to = graph->getEdgeEnd(e);
@@ -54,9 +80,9 @@ void dfs_chain(int x, Graph* graph, int length, string* result[]) {
 }
 
 //int gen_chains_all(Word* word[], int len, char* result[]) {
-int gen_chains_all(char* fileName, string* result[]) {
+int gen_chains_all(char* words[], int len, char* result[]) {
 	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 
 	int topo[MAXN_POINT];
 	int r = topoSort(noSelfLoopGraph, topo);
@@ -73,7 +99,7 @@ int gen_chains_all(char* fileName, string* result[]) {
 
 	//start from every point
 	for (int i = 0; i < SET_SIZE; i++) {
-		int size = (word_count + 1) << 2;
+		int size = (len + 1) << 2;
 		memset(vist, 0, size);
 		dfs_chain(i, inputGraph, 0, result);
 	}
@@ -85,10 +111,11 @@ int gen_chains_all(char* fileName, string* result[]) {
 
 // job 2
 
-int gen_chain_word_unique(char* fileName, string* result[]) {
+int gen_chain_word_unique(char* words[], int len, char* result[]) {
 	// get graph
 	Graph* inputGraph, *noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
+
 	// get topo order
 	int topo[MAXN_POINT];
 	int r = topoSort(noSelfLoopGraph, topo);
@@ -99,6 +126,7 @@ int gen_chain_word_unique(char* fileName, string* result[]) {
 	else {
 		printf("Ok we don't have loop!\n");
 	}
+
 	// dp
 	int dp[MAXN_POINT], preEdge[MAXN_POINT];
 	memset(dp, 0, SET_SIZE << 2);
@@ -142,6 +170,7 @@ int gen_chain_word_unique(char* fileName, string* result[]) {
 }
 // end job 2
 // job 3
+
 int max_cnt;
 
 int subGraphMaxDist[MAXN_POINT][MAXN_POINT]; 
@@ -164,9 +193,6 @@ bool get_sub_graph_chain_word(Graph* graph, int x, int end, int length, vector<W
 		for (int i = 1; i <= wordCnt; i++) {
 			subChain->push_back(wordList[i]);
 		}
-		/*for (int i = 1; i <= wordCnt; i++)
-			cout << wordList[i]->getStr() << " ";
-		cout << endl;*/
 		return 1;
 	}
 	pointVistCnt[x]++;
@@ -238,14 +264,6 @@ void get_sub_graph_max_dist_word(Graph* subLoopGraph, int subGraphCnt, int* poin
 			}
 		}
 	}
-	/*
-	for (int i = 0; i < SET_SIZE; i++) {
-		for (int j = 0; j < SET_SIZE; j++) {
-			cout << subGraphMaxDist[i][j] << " ";
-		}
-		cout << endl;
-	}
-	*/
 }
 
 Graph subLoopGraph[MAXN_POINT];
@@ -375,11 +393,12 @@ int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 	return length;
 }
 
-int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) {
+int gen_chain_word_loop(char* words[], int len, char* result[], char head, char tail) {
 	// get graph
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
+
 	// get loopless graph
 	Graph* noLoopGraph;
 
@@ -434,11 +453,11 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 	return length;
 }
 
-int gen_chain_word_loopless(char* fileName, string* result[], char head, char tail) {
+int gen_chain_word_loopless(char* words[], int len, char* result[], char head, char tail) {
 	// get graph
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 	// get topo order
 	//printf("getting topo order...\n");
 	int topo[MAXN_POINT];
@@ -524,14 +543,15 @@ int gen_chain_word_loopless(char* fileName, string* result[], char head, char ta
 	return length;
 }
 
-int gen_chain_word(char* fileName, string* result[], char head, char tail, bool enable_loop) {
+int gen_chain_word(char* words[], int len, char* result[], char head, char tail, bool enable_loop) {
 	if (enable_loop) {
-		return gen_chain_word_loop(fileName, result, head, tail);
+		return gen_chain_word_loop(words, len, result, head, tail);
 	}
 	else {
-		return gen_chain_word_loopless(fileName, result, head, tail);
+		return gen_chain_word_loopless(words, len, result, head, tail);
 	}
 }
+
 // end job 3
 // job 4
 bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
@@ -540,9 +560,6 @@ bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<W
 		for (int i = 1; i <= wordCnt; i++) {
 			subChain->push_back(wordList[i]);
 		}
-		/*for (int i = 1; i <= wordCnt; i++)
-			cout << wordList[i]->getStr() << " ";
-		cout << endl;*/
 		return 1;
 	}
 	pointVistCnt[x]++;
@@ -615,14 +632,6 @@ void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* poin
 			}
 		}
 	}
-	/*
-	for (int i = 0; i < SET_SIZE; i++) {
-		for (int j = 0; j < SET_SIZE; j++) {
-			cout << subGraphMaxDist[i][j] << " ";
-		}
-		cout << endl;
-	}
-	*/
 }
 
 void gen_chain_char_dp_loop(int dp[], char head, int weight[], int preEdge[], int preSCCPoint[],
@@ -646,10 +655,7 @@ void gen_chain_char_dp_loop(int dp[], char head, int weight[], int preEdge[], in
 	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
 	int* first = noLoopGraph->getFirst();
 	//printf("Now check count: %d\n", subGraphCnt);
-	/*for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
-	*/
+
 	for (int i = 0; i < subGraphCnt; i++) {
 		int x = topo[i];
 		//cout << "Now in block : " << x << endl;
@@ -753,11 +759,11 @@ int gen_chain_char_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 	return length;
 }
 
-int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) {
+int gen_chain_char_loop(char* words[], int len, char* result[], char head, char tail) {
 	// get graph
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 	// get loopless graph
 	Graph* noLoopGraph;
 	int subGraphCnt;
@@ -786,11 +792,7 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 	gen_chain_char_dp_loop(dp, head, weight, preEdge, preSCCPoint,
 		noLoopGraph, subLoopGraph, subGraphCnt, topo, pointColor);
 
-	/*
-	for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
-	*/
+
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -816,11 +818,11 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 	return length;
 }
 
-int gen_chain_char_loopless(char* fileName, string* result[], char head, char tail) {
+int gen_chain_char_loopless(char* words[], int len, char* result[], char head, char tail) {
 	// get graph
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 	// get topo order
 	//printf("getting topo order...\n");
 	int topo[MAXN_POINT];
@@ -911,12 +913,13 @@ int gen_chain_char_loopless(char* fileName, string* result[], char head, char ta
 	save_chain_reverse(result, length);
 	return length;
 }
-int gen_chain_char(char* fileName, string* result[], char head, char tail, bool enable_loop) {
+
+int gen_chain_char(char* words[], int len, char* result[], char head, char tail, bool enable_loop) {
 	if (enable_loop) {
-		return gen_chain_char_loop(fileName, result, head, tail);
+		return gen_chain_char_loop(words, len, result, head, tail);
 	}
 	else {
-		return gen_chain_char_loopless(fileName, result, head, tail);
+		return gen_chain_char_loopless(words, len, result, head, tail);
 	}
 }
 // end job 4

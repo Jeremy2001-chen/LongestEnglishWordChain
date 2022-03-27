@@ -1,7 +1,27 @@
 #include "graph.h"
 #include "error.h"
+#include "word.h"
 
 Graph* inputGraph;
+
+void buildGraph(Graph** graph, Graph** noLoopGraph, char* words[], int cnt) {
+	Graph* graph1, * graph2;
+	graph1 = new Graph(SET_SIZE);
+	graph2 = new Graph(SET_SIZE);
+	for (int i = 1; i <= cnt; i++) {
+		Word* wd = new Word(words[i], strlen(words[i]));
+		int s = wd->getBegin(), t = wd->getEnd(), len = wd->getLength();
+		graph1->link(s, t, len, wd);
+		if (s != t) {
+			graph2->link(s, t, len, wd);
+		}
+		else {
+			graph2->addPointWeight(s, len, wd);
+		}
+	}
+	*graph = graph1;
+	*noLoopGraph = graph2;
+}
 
 int topoSort(Graph* graph, int* sort) {
 	int* tmp = graph->getInDegree(), *first = graph->getFirst();

@@ -7,38 +7,18 @@
 #include <set>
 using namespace std;
 
-Word* word[MAXN_WORD];
-int word_count = 0;
-
-static void buildGraph(Graph** graph, Graph** noLoopGraph, Word* wd, int cnt) {
-	Graph* graph1, *graph2;
-	graph1 = new Graph(SET_SIZE);
-	graph2 = new Graph(SET_SIZE);
-	for (int i = 1; i <= cnt; i++) {
-		int s = word[i]->getBegin(), t = word[i]->getEnd(), len = word[i]->getLength();
-		graph1->link(s, t, len, word[i]);
-		if (s != t) {
-			graph2->link(s, t, len, word[i]);
-		} else {
-			graph2->addPointWeight(s, len, word[i]);
-		}
-	}
-	*graph = graph1;
-	*noLoopGraph = graph2;
-}
-
 set <string> wordSet;
 
-int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
+int handleInput(char* fileName, char* word[], int& len){
 	FILE* file;
 	int r = fopen_s(&file, fileName, "r");
 	if (file == NULL) {
-		return FILE_NOT_FIND; //todo
+		return -FILE_NOT_FIND; //todo
 	}
 	else {
 		string s = "";
 		char c;
-		word_count = 0;
+		int wordCount = 0;
 		wordSet.clear();
 		while ((c = fgetc(file)) != EOF) {
 			if (c >= 'A' && c <= 'Z')
@@ -48,18 +28,34 @@ int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
 			else {
 				if ((int)s.size() > 1) {
 					if (wordSet.find(s) == wordSet.end()) {
-						word[++word_count] = new Word(s);
-						wordSet.insert(s);
+						char* tmp = (char*)malloc(s.length() + 1);
+						if (tmp != NULL) {
+							char* str = tmp;
+							for (int i = 0; i < s.length(); i++) {
+								(*str++) = s[i];
+							}
+							(*str) = '\0';
+							word[++wordCount] = tmp;
+							wordSet.insert(s);
+						}
 					}
 				}
 				s = "";
 			}
 		}
 		if ((int)s.size() > 1 && wordSet.find(s) == wordSet.end()) {
-			word[++word_count] = new Word(s);
+			char* tmp = (char*)malloc(s.length() + 1);
+			if (tmp != NULL) {
+				char* str = tmp;
+				for (int i = 0; i < s.length(); i++) {
+					(*str++) = s[i];
+				}
+				(*str) = '\0';
+				word[++wordCount] = tmp;
+			}
 		}
-
-		buildGraph(inputGraph, noSelfLoopGraph, word[0], word_count);
+		len = wordCount;
+		//buildGraph(inputGraph, noSelfLoopGraph, word[0], word_count);
 
 		/*for (int i = 1; i <= word_count; ++i) {
 			word[i]->print();

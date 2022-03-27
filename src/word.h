@@ -11,17 +11,17 @@ const int MAXN_WORD = 10101;
 
 class Word {
 private:
-	string str;
+	char* str;
 	int begin, end;
 	int length;
 public:
 	Word() {
-		str = "";
+		str = NULL;
 		begin = end = length = 0;
 	}
-	Word(string s) {
-		str = std::move(s);
-		length = str.length();
+	Word(char* s, int len) {
+		str = s;
+		length = len;
 		begin = (int)str[0] - (int)'a';
 		end = (int)str[(size_t)length - 1] - (int)'a';
 	}
@@ -37,7 +37,7 @@ public:
 	int getLength() {
 		return length;
 	}
-	string getStr() {
+	char* getStr() {
 		return str;
 	}
 };
