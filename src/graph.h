@@ -54,17 +54,29 @@ private:
 	int point_char_weight[MAXN_POINT];
 	int self_edge_first[MAXN_POINT];
 public:
-	Graph() {}
-	Graph(int _point_cnt) {
-		point_cnt = _point_cnt;
-		memset(first, 0, point_cnt << 2);
-		memset(in_degree, 0, point_cnt << 2);
+	Graph() {
+		point_cnt =	0;
+		int size = (point_cnt << 2);
+		memset(first, 0, size);
+		memset(in_degree, 0, size);
 		edges = new vector<Edges*>();
 		edges->push_back(new Edges(0, 0, 0, 0, NULL));
 		edge_cnt = 0;
-		memset(point_weight, 0, point_cnt << 2);
-		memset(point_char_weight, 0, point_cnt << 2);
-		memset(self_edge_first, 0, point_cnt << 2);
+		memset(point_weight, 0, size);
+		memset(point_char_weight, 0, size);
+		memset(self_edge_first, 0, size);
+	}
+	Graph(int _point_cnt) {
+		point_cnt = _point_cnt;
+		int size = (point_cnt << 2);
+		memset(first, 0, size);
+		memset(in_degree, 0, size);
+		edges = new vector<Edges*>();
+		edges->push_back(new Edges(0, 0, 0, 0, NULL));
+		edge_cnt = 0;
+		memset(point_weight, 0, size);
+		memset(point_char_weight, 0, size);
+		memset(self_edge_first, 0, size);
 	}
 	void link(int s, int e, int v, Word * word) {
 		edge_cnt++;

@@ -10,5 +10,6 @@
 #define NO_CHAR 5
 #define CHAR_FORM_ERROR 6
 #define PARAMETER_FORM_ERROR 7
+#define ALLOC_MEMORY_ERROR 8
 
 #endif

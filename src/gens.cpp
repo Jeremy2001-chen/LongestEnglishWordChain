@@ -73,7 +73,8 @@ int gen_chains_all(char* fileName, string* result[]) {
 
 	//start from every point
 	for (int i = 0; i < SET_SIZE; i++) {
-		memset(vist, 0, (word_count + 1) << 2);
+		int size = (word_count + 1) << 2;
+		memset(vist, 0, size);
 		dfs_chain(i, inputGraph, 0, result);
 	}
 
@@ -247,38 +248,13 @@ void get_sub_graph_max_dist_word(Graph* subLoopGraph, int subGraphCnt, int* poin
 	*/
 }
 
-int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) {
-	// get graph
-	//printf("getting graph...\n");
-	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
-	// get loopless graph
-	Graph* noLoopGraph;
-	Graph subLoopGraph[MAXN_POINT];
-	int subGraphCnt;
-	int pointColor[MAXN_POINT];
-	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
-	// get topo order
-	printf("getting topo order...\n");
-	//printf("%x\n", noLoopGraph);
-	int topo[MAXN_POINT];
-	int r = topoSort(noLoopGraph, topo);
-	if (r < 0) {
-		printf("Error the graph have loop!\n");
-	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
-	//get sub graph max dist
-	get_sub_graph_max_dist_word(subLoopGraph, subGraphCnt, pointColor);
-	// get start points
-	int dp[MAXN_POINT], preEdge[MAXN_POINT], preSCCPoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
-	int weight[MAXN_POINT]; //record the self loop weight
-	for (int i = 0; i < SET_SIZE; i++) {
-		weight[i] = noSelfLoopGraph->getPointWeight(i);
-	}
+Graph subLoopGraph[MAXN_POINT];
+
+void gen_chain_word_dp_loop(int dp[], char head, int weight[], int preEdge[], int preSCCPoint[], 
+	Graph * noLoopGraph, Graph subLoopGraph[], int subGraphCnt, int topo[], int pointColor[]) {
+
 	memset(dp, 255, sizeof(dp));
-	
+
 	if (head == 0) {
 		for (int i = 0; i < SET_SIZE; i++) { // every point is ready in itself sub graph
 			dp[i] = weight[i];
@@ -295,11 +271,8 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 
 	// for preGraph, 0 to subGraphCnt - 1 means subGraph, subGraphCnt means noLoopGraph
 	int* first = noLoopGraph->getFirst();
-	//printf("Now check count: %d\n", subGraphCnt);
-	/*for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
-	*/
+
+
 	for (int i = 0; i < subGraphCnt; i++) {
 		int x = topo[i];
 		//cout << "Now in block : " << x << endl;
@@ -314,7 +287,7 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 				for (int k = 0; k < SET_SIZE; k++) {
 					if (pointColor[k] == x) {
 						int to_weight = subLoopGraph[i].getPointWeight(k);
-						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) { 
+						if (dp[j] + subGraphMaxDist[j][k] > gp[k]) {
 							gp[k] = dp[j] + subGraphMaxDist[j][k];
 							gpPoint[k] = j;
 						}
@@ -341,37 +314,14 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 			}
 		}
 	}
+}
 
-	/*
-	for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
-	*/
-	// get end points
-	int maxa = 0;
-	if (tail == 0) {
-		for (int i = 0; i < SET_SIZE; i++) {
-			if (dp[i] > dp[maxa]) {
-				maxa = i;
-			}
-		}
-	}
-	else {
-		maxa = tail - 'a';
-	}
-
-	if (dp[maxa] <= 1) {
-		return 0; //todo
-	}
-
-	cout << "Max len: " << dp[maxa] << endl;
-
-	//initial
+int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int pointColor[],
+	Graph subLoopGraph[], Graph *noLoopGraph) {
 	chain = new vector<Word*>();
 	int length = 0;
 	chain_count = 1;
 
-	int now = maxa;
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
 		// cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
@@ -389,12 +339,13 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 				exit(1);
 			}
 			//cout << (*subChain).size() << endl;
-			for (int i = (*subChain).size()-1 ; i >= 0; i--) {
+			for (int i = (*subChain).size() - 1; i >= 0; i--) {
 				chain->push_back((*subChain)[i]);
 				length++;
 			}
 			now = from;
-		} else {
+		}
+		else {
 			inSCC = false;
 			int e = preEdge[now];
 			int now_weight = subLoopGraph[pointColor[now]].getPointWeight(now);
@@ -421,6 +372,64 @@ int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) 
 			length++;
 		}
 	}
+	return length;
+}
+
+int gen_chain_word_loop(char* fileName, string* result[], char head, char tail) {
+	// get graph
+	//printf("getting graph...\n");
+	Graph* inputGraph, * noSelfLoopGraph;
+	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	// get loopless graph
+	Graph* noLoopGraph;
+
+	int subGraphCnt;
+	int pointColor[MAXN_POINT];
+	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
+	// get topo order
+	printf("getting topo order...\n");
+	//printf("%x\n", noLoopGraph);
+	int topo[MAXN_POINT];
+	int r = topoSort(noLoopGraph, topo);
+	if (r < 0) {
+		printf("Error the graph have loop!\n");
+	}
+	else {
+		printf("Ok we don't have loop!\n");
+	}
+	//get sub graph max dist
+	get_sub_graph_max_dist_word(subLoopGraph, subGraphCnt, pointColor);
+	// get start points
+	int dp[MAXN_POINT], preEdge[MAXN_POINT], preSCCPoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
+	int weight[MAXN_POINT]; //record the self loop weight
+	for (int i = 0; i < SET_SIZE; i++) {
+		weight[i] = noSelfLoopGraph->getPointWeight(i);
+	}
+
+	gen_chain_word_dp_loop(dp, head, weight, preEdge, preSCCPoint,
+		noLoopGraph, subLoopGraph, subGraphCnt, topo, pointColor);
+
+	int maxa = 0;
+	if (tail == 0) {
+		for (int i = 0; i < SET_SIZE; i++) {
+			if (dp[i] > dp[maxa]) {
+				maxa = i;
+			}
+		}
+	}
+	else {
+		maxa = tail - 'a';
+	}
+
+	if (dp[maxa] <= 1) {
+		return 0; //todo
+	}
+
+	cout << "Max len: " << dp[maxa] << endl;
+
+	//initial
+	int length = gen_chain_word_result_loop(maxa, preEdge, preSCCPoint, pointColor, subLoopGraph, noLoopGraph);
+
 	save_chain_reverse(result, length);
 	return length;
 }
@@ -616,36 +625,8 @@ void get_sub_graph_max_dist_char(Graph* subLoopGraph, int subGraphCnt, int* poin
 	*/
 }
 
-int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) {
-	// get graph
-	//printf("getting graph...\n");
-	Graph* inputGraph, * noSelfLoopGraph;
-	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
-	// get loopless graph
-	Graph* noLoopGraph;
-	Graph subLoopGraph[MAXN_POINT];
-	int subGraphCnt;
-	int pointColor[MAXN_POINT];
-	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
-	// get topo order
-	printf("getting topo order...\n");
-	//printf("%x\n", noLoopGraph);
-	int topo[MAXN_POINT];
-	int r = topoSort(noLoopGraph, topo);
-	if (r < 0) {
-		printf("Error the graph have loop!\n");
-	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
-	//get sub graph max dist
-	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
-	// get start points
-	int dp[MAXN_POINT], preEdge[MAXN_POINT], preSCCPoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
-	int weight[MAXN_POINT]; //record the self loop weight
-	for (int i = 0; i < SET_SIZE; i++) {
-		weight[i] = noSelfLoopGraph->getPointCharWeight(i);
-	}
+void gen_chain_char_dp_loop(int dp[], char head, int weight[], int preEdge[], int preSCCPoint[],
+	Graph* noLoopGraph, Graph subLoopGraph[], int subGraphCnt, int topo[], int pointColor[]) {
 	memset(dp, 255, sizeof(dp));
 
 	if (head == 0) {
@@ -711,37 +692,14 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 			}
 		}
 	}
+}
 
-	/*
-	for (int i = 0; i < SET_SIZE; i++)
-		cout << dp[i] << " ";
-	cout << endl;
-	*/
-	// get end points
-	int maxa = 0;
-	if (tail == 0) {
-		for (int i = 0; i < SET_SIZE; i++) {
-			if (dp[i] > dp[maxa]) {
-				maxa = i;
-			}
-		}
-	}
-	else {
-		maxa = tail - 'a';
-	}
-
-	if (dp[maxa] <= 1) {
-		return 0; //todo
-	}
-
-	cout << "Max len: " << dp[maxa] << endl;
-
-	//initial
+int gen_chain_char_result_loop(int now, int preEdge[], int preSCCPoint[], int pointColor[],
+	Graph subLoopGraph[], Graph* noLoopGraph) {
 	chain = new vector<Word*>();
 	int length = 0;
 	chain_count = 1;
 
-	int now = maxa;
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
 		// cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
@@ -792,6 +750,68 @@ int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) 
 			length++;
 		}
 	}
+	return length;
+}
+
+int gen_chain_char_loop(char* fileName, string* result[], char head, char tail) {
+	// get graph
+	//printf("getting graph...\n");
+	Graph* inputGraph, * noSelfLoopGraph;
+	handleInput(fileName, &inputGraph, &noSelfLoopGraph);
+	// get loopless graph
+	Graph* noLoopGraph;
+	int subGraphCnt;
+	int pointColor[MAXN_POINT];
+	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
+	// get topo order
+	printf("getting topo order...\n");
+	//printf("%x\n", noLoopGraph);
+	int topo[MAXN_POINT];
+	int r = topoSort(noLoopGraph, topo);
+	if (r < 0) {
+		printf("Error the graph have loop!\n");
+	}
+	else {
+		printf("Ok we don't have loop!\n");
+	}
+	//get sub graph max dist
+	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
+	// get start points
+	int dp[MAXN_POINT], preEdge[MAXN_POINT], preSCCPoint[MAXN_POINT]; //dp[id of subgraph][id of endpoint]
+	int weight[MAXN_POINT]; //record the self loop weight
+	for (int i = 0; i < SET_SIZE; i++) {
+		weight[i] = noSelfLoopGraph->getPointCharWeight(i);
+	}
+	
+	gen_chain_char_dp_loop(dp, head, weight, preEdge, preSCCPoint,
+		noLoopGraph, subLoopGraph, subGraphCnt, topo, pointColor);
+
+	/*
+	for (int i = 0; i < SET_SIZE; i++)
+		cout << dp[i] << " ";
+	cout << endl;
+	*/
+	// get end points
+	int maxa = 0;
+	if (tail == 0) {
+		for (int i = 0; i < SET_SIZE; i++) {
+			if (dp[i] > dp[maxa]) {
+				maxa = i;
+			}
+		}
+	}
+	else {
+		maxa = tail - 'a';
+	}
+
+	if (dp[maxa] <= 1) {
+		return 0; //todo
+	}
+
+	cout << "Max len: " << dp[maxa] << endl;
+
+	//initial
+	int length = gen_chain_char_result_loop(maxa, preEdge, preSCCPoint, pointColor, subLoopGraph, noLoopGraph);
 	save_chain_reverse(result, length);
 	return length;
 }

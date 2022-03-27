@@ -22,8 +22,8 @@ public:
 	Word(string s) {
 		str = std::move(s);
 		length = str.length();
-		begin = str[0] - 'a';
-		end = str[length - 1] - 'a';
+		begin = (int)str[0] - (int)'a';
+		end = (int)str[(size_t)length - 1] - (int)'a';
 	}
 	void print() {
 		cout << str << " ";

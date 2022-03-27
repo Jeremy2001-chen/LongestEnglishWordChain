@@ -32,39 +32,41 @@ set <string> wordSet;
 int handleInput(char* fileName, Graph** inputGraph, Graph** noSelfLoopGraph) {
 	FILE* file;
 	int r = fopen_s(&file, fileName, "r");
-	if (r < 0) {
+	if (file == NULL) {
 		return FILE_NOT_FIND; //todo
 	}
-	string s = "";
-	char c;
-	word_count = 0;
-	wordSet.clear();
-	while ((c = fgetc(file)) != EOF) {
-		if (c >= 'A' && c <= 'Z')
-			s += char(c - 'A' + 'a');
-		else if (c >= 'a' && c <= 'z')
-			s += c;
-		else {
-			if ((int)s.size() > 1) {
-				if (wordSet.find(s) == wordSet.end()) {
-					word[++word_count] = new Word(s);
-					wordSet.insert(s);
+	else {
+		string s = "";
+		char c;
+		word_count = 0;
+		wordSet.clear();
+		while ((c = fgetc(file)) != EOF) {
+			if (c >= 'A' && c <= 'Z')
+				s += char(c - 'A' + 'a');
+			else if (c >= 'a' && c <= 'z')
+				s += c;
+			else {
+				if ((int)s.size() > 1) {
+					if (wordSet.find(s) == wordSet.end()) {
+						word[++word_count] = new Word(s);
+						wordSet.insert(s);
+					}
 				}
+				s = "";
 			}
-			s = "";
 		}
-	}
-	if ((int)s.size() > 1 && wordSet.find(s) == wordSet.end()) {
-		word[++word_count] = new Word(s);
-	}
+		if ((int)s.size() > 1 && wordSet.find(s) == wordSet.end()) {
+			word[++word_count] = new Word(s);
+		}
 
-	buildGraph(inputGraph, noSelfLoopGraph, word[0], word_count);
+		buildGraph(inputGraph, noSelfLoopGraph, word[0], word_count);
 
-	/*for (int i = 1; i <= word_count; ++i) {
-		word[i]->print();
+		/*for (int i = 1; i <= word_count; ++i) {
+			word[i]->print();
+		}
+		printf("\n");
+		*/
 	}
-	printf("\n");
-	*/
 	return 0;
 }
 

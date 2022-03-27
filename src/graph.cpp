@@ -80,7 +80,8 @@ void tarjan(Graph* graph, int x) {
 void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph, int* subGraphCnt, int* pointColor){
 	//printf("No Loop Graph is building!\n");
 	int originPointCnt = noSelfLoopGraph->getPointCount();
-	memset(sccVisit, 0, (originPointCnt + 1) << 2);
+	int size = (originPointCnt + 1) << 2;
+	memset(sccVisit, 0, size);
 	dfsNum = blockNum = 0;
 	for (int i = 0; i < originPointCnt; i++) {
 		if (!sccVisit[i]) {

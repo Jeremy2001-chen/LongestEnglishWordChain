@@ -1,6 +1,7 @@
 #include <iostream>
 #include "error.h"
 #include "parameter.h"
+#include <cassert>
 
 using namespace std;
 
@@ -29,12 +30,19 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             }
             pathFind = true;
             int len = strlen(argv[i]);
-            char* path = (char*)malloc(len + 1);
-            for (int j = 0; j < len; j++) {
-                path[j] = argv[i][j];
+            char* path = (char*)malloc(static_cast<size_t>((size_t)len + 1));
+            if (path == NULL) {
+                cout << "alloc memory error!" << endl;
+                return -ALLOC_MEMORY_ERROR;
             }
-            path[len] = '\0';
-            (*name) = path;
+            else {
+                char* tmp = path;
+                for (int j = 0; j < len; j++) {
+                    (*tmp++) = argv[i][j];
+                }
+                (*tmp) = '\0';
+                (*name) = path;
+            }
             i++;
             continue;
         }
