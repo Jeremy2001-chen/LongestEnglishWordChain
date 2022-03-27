@@ -19,7 +19,7 @@ void save_chain(char* result[], int length) {
 	for (int i = 0; i < length; i++) {
 		totLen += strlen((*chain)[i]->getStr());
 	}
-	char* now = (char*)malloc(static_cast<size_t>(totLen + length));
+	char* now = (char*)malloc(static_cast<size_t>((size_t)totLen + length));
 	if (now != NULL) {
 		char* str = now;
 		for (int i = 0; i < length; i++) {
@@ -41,7 +41,7 @@ void save_chain_reverse(char* result[], int length) {
 	for (int i = length-1; i >= 0; i--) {
 		totLen += strlen((*chain)[i]->getStr());
 	}
-	char* now = (char*)malloc(static_cast<size_t>(totLen + length));
+	char* now = (char*)malloc(static_cast<size_t>((size_t)totLen + length));
 	if (now != NULL) {
 		char* str = now;
 		for (int i = length-1; i >= 0; i--) {
