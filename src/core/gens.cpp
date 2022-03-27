@@ -1,7 +1,7 @@
+#include "pch.h"
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-#include "input.h"
 #include "graph.h"
 #include "word.h"
 #include "chain.h"

@@ -1,15 +1,16 @@
+#include "pch.h"
 #include "input.h"
 #include <cstdio>
 #include <cstring>
-#include "word.h"
-#include "graph.h"
 #include <iostream>
 #include <set>
+#include "error.h"
+
 using namespace std;
 
 set <string> wordSet;
 
-int handleInput(char* fileName, char* word[], int& len){
+int handleInput(char* fileName, char* word[], int* len){
 	FILE* file;
 	int r = fopen_s(&file, fileName, "r");
 	if (file == NULL) {
@@ -54,7 +55,7 @@ int handleInput(char* fileName, char* word[], int& len){
 				word[++wordCount] = tmp;
 			}
 		}
-		len = wordCount;
+		(* len) = wordCount;
 		//buildGraph(inputGraph, noSelfLoopGraph, word[0], word_count);
 
 		/*for (int i = 1; i <= word_count; ++i) {

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "graph.h"
 #include "error.h"
 #include "word.h"

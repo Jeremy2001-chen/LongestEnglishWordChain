@@ -2,12 +2,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include "input.h"
-#include "word.h"
-#include "graph.h"
-#include "gens.h"
 #include "parameter.h"
-#include "output.h"
+#include "Wordlist.h"
 
 using namespace std;
 
@@ -15,8 +11,6 @@ const int MAXN = 1e6 + 10;
 
 char* result[MAXN];
 char* wordList[MAXN_WORD];
-
-int wordCount = 0;
 
 int main(int argc, char *argv[])
 {
@@ -27,9 +21,11 @@ int main(int argc, char *argv[])
     if (r < 0) {
         exit(1);
     }
+    
+    static int wordCount = 0;
+    handleInput(name, wordList, &wordCount);
 
-    handleInput(name, wordList, wordCount);
-
+    cout << wordCount << endl;
     int tot = 0;
     switch (problemType) {
     case WORD_CHAIN_COUNT_PROBLEM:

@@ -17,9 +17,10 @@ static bool checkChar(char* str) {
 }
 
 int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable, int& start, int& end, char** name) {
-    char* parameter;
+    char* parameter = NULL;
     bool pathFind = false;
     char type;
+    char* path = NULL;
     int r;
     start = 0; end = 0;
     for (int i = 1; i < argc; i++) {
@@ -30,7 +31,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             }
             pathFind = true;
             int len = strlen(argv[i]);
-            char* path = (char*)malloc(static_cast<size_t>((size_t)len + 1));
+            path = (char*)malloc(static_cast<size_t>((size_t)len + 1));
             if (path == NULL) {
                 cout << "alloc memory error!" << endl;
                 return -ALLOC_MEMORY_ERROR;
@@ -89,6 +90,10 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             cout << "Parameter form not correct!" << endl;
             return -PARAMETER_FORM_ERROR;
         }
+    }
+    if (path == NULL) {
+        cout << "Path not exists!" << endl;
+        return -PATH_NOT_EXISTS;
     }
     return 0;
 }

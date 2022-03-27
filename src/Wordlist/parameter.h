@@ -1,6 +1,8 @@
 #ifndef _PARAMETER_H_
 #define _PARAMETER_H_
 
+#define MAXN_WORD 20202
+
 int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable, int& start, int& end, char** name);
 
 #define WORD_CHAIN_COUNT_PROBLEM 1
