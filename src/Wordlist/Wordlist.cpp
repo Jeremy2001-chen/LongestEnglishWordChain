@@ -30,19 +30,19 @@ int main(int argc, char *argv[])
     switch (problemType) {
     case WORD_CHAIN_COUNT_PROBLEM:
         tot = gen_chains_all(wordList, wordCount, result);
-        output(argv[0], tot, result, tot);
+        output(name, tot, result, tot);
         break;
     case FIRST_CHAR_NOT_SAME_PROBLEM:
         tot = gen_chain_word_unique(wordList, wordCount, result);
-        output(argv[0], tot, result, (tot > 0));
+        output(name, tot, result, (tot > 0));
         break;
     case WORD_CHAIN_MAX_WORD_PROBLEM:
         tot = gen_chain_word(wordList, wordCount, result, start, end, loop_enable);
-        output(argv[0], tot, result, (tot > 0));
+        output(name, tot, result, (tot > 0));
         break;
     case WORD_CHAIN_MAX_CHAR_PROBLEM:
         tot = gen_chain_char(wordList, wordCount, result, start, end, loop_enable);
-        output(argv[0], tot, result, (tot > 0));
+        output(name, tot, result, (tot > 0));
         break;
     }
 

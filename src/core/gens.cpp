@@ -367,7 +367,7 @@ int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 			inSCC = false;
 			int e = preEdge[now];
 			int now_weight = subLoopGraph[pointColor[now]].getPointWeight(now);
-			if (now > 0) {
+			if (now_weight > 0) {
 				int* first = subLoopGraph[pointColor[now]].getSelfEdgeFirst();
 				for (int e = first[now]; e; e = subLoopGraph[pointColor[now]].getNext(e)) {
 					chain->push_back(subLoopGraph[pointColor[now]].getEdgeWord(e));
@@ -522,7 +522,7 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 	while (preEdge[now] > 0) {
 		int e = preEdge[now];
 		int now_weight = noSelfLoopGraph->getPointWeight(now);
-		if (now > 0) {
+		if (now_weight > 0) {
 			int* first = noSelfLoopGraph->getSelfEdgeFirst();
 			for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 				chain->push_back(noSelfLoopGraph->getEdgeWord(e));
@@ -533,7 +533,8 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 		length++;
 		now = from;
 	}
-	if (now > 0) {
+	int now_weight = noSelfLoopGraph->getPointWeight(now);
+	if (now_weight > 0) {
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();
 		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
@@ -733,7 +734,7 @@ int gen_chain_char_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 			inSCC = false;
 			int e = preEdge[now];
 			int now_weight = subLoopGraph[pointColor[now]].getPointCharWeight(now);
-			if (now > 0) {
+			if (now_weight > 0) {
 				int* first = subLoopGraph[pointColor[now]].getSelfEdgeFirst();
 				for (int e = first[now]; e; e = subLoopGraph[pointColor[now]].getNext(e)) {
 					chain->push_back(subLoopGraph[pointColor[now]].getEdgeWord(e));
@@ -893,7 +894,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 	while (preEdge[now] > 0) {
 		int e = preEdge[now];
 		int now_weight = noSelfLoopGraph->getPointWeight(now);
-		if (now > 0) {
+		if (now_weight > 0) {
 			int* first = noSelfLoopGraph->getSelfEdgeFirst();
 			for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 				chain->push_back(noSelfLoopGraph->getEdgeWord(e));
@@ -904,7 +905,8 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		length++;
 		now = from;
 	}
-	if (now > 0) {
+	int now_weight = noSelfLoopGraph->getPointWeight(now);
+	if (now_weight > 0) {
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();
 		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
