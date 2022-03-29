@@ -216,7 +216,7 @@ namespace coretest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, 2);
+			Assert::AreEqual(ans, 3);
 
 		}
 		TEST_METHOD(TestGenCharNFF)
@@ -269,7 +269,7 @@ namespace coretest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, 3);
+			Assert::AreEqual(ans, 4);
 
 		}
 		TEST_METHOD(TestGenWordNFF)
@@ -337,7 +337,7 @@ namespace coretest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, 3);
+			Assert::AreEqual(ans, 12);
 
 		}
 	};

@@ -526,6 +526,7 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 			int* first = noSelfLoopGraph->getSelfEdgeFirst();
 			for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 				chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+				length++;
 			}
 		}
 		int from = noSelfLoopGraph->getEdgeStart(e);
@@ -538,6 +539,7 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();
 		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+			length++;
 		}
 	}
 	save_chain_reverse(result, length);
@@ -898,6 +900,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 			int* first = noSelfLoopGraph->getSelfEdgeFirst();
 			for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 				chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+				length++;
 			}
 		}
 		int from = noSelfLoopGraph->getEdgeStart(e);
@@ -910,6 +913,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();
 		for (int e = first[now]; e; e = noSelfLoopGraph->getNext(e)) {
 			chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+			length++;
 		}
 	}
 	save_chain_reverse(result, length);

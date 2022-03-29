@@ -25,5 +25,14 @@ namespace getwordstest
 			//int r = 0;
 			Assert::AreEqual(r, 0);
 		}
+		TEST_METHOD(TestRepeat)
+		{
+			char fileName[100] = "E:/softengine/LongestEnglishWordChain/test/input1.txt";
+			char* word[500];
+			int len = 0;
+			int r = handleInput(fileName, word, &len);
+			//int r = 0;
+			Assert::AreEqual(r, 0);
+		}
 	};
 }
