@@ -6,10 +6,10 @@
 /src/Wordlist/x64
 /src/Wordlist/*.sln
 /src/Wordlist/*.vcxproj*
-/src/input/.vs
-/src/input/x64
-/src/input/*.sln
-/src/input/*.vcxproj*
+/src/getwords/.vs
+/src/getwords/x64
+/src/getwords/*.sln
+/src/getwords/*.vcxproj*
 /src/core/.vs
 /src/core/x64
 /src/core/*.sln
