@@ -4,7 +4,6 @@
 #include<cstring>
 #include "graph.h"
 #include "word.h"
-#include "chain.h"
 #include "gens.h"
 
 
