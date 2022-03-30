@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 #include <fstream>
+#include <direct.h>
 
 #ifdef IMPORT_DLL
 #else
@@ -18,8 +19,8 @@ IMPORT_DLL int gen_chain_char(char* words[], int len, char* result[], char head,
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-char* words[2000];
-char* result[2000];
+char* words[20000];
+char* result[20000];
 
 namespace coretest
 {
@@ -98,13 +99,15 @@ namespace coretest
 
 		TEST_METHOD(TestGenWordNNT)
 		{
+			//char* buffer = _getcwd(NULL, 0);
+			//Assert::AreEqual(buffer, "true");
 			
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 			
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 			
 			int ans = gen_chain_word(words, len, result, 0, 0, true);
 
@@ -117,12 +120,12 @@ namespace coretest
 		TEST_METHOD(TestGenWordFNT)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_word(words, len, result, 'f', 0, true);
 
@@ -135,12 +138,12 @@ namespace coretest
 		TEST_METHOD(TestGenWordNFT)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_word(words, len, result, 0, 'f', true);
 
@@ -152,12 +155,12 @@ namespace coretest
 		TEST_METHOD(TestGenCharNNT)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_char(words, len, result, 0, 0, true);
 
@@ -169,12 +172,12 @@ namespace coretest
 		TEST_METHOD(TestGenCharNFT)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_char(words, len, result, 0, 'f', true);
 
@@ -186,12 +189,12 @@ namespace coretest
 		TEST_METHOD(TestGenCharFNT)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input.txt";
+			char filename[100] = "../test/input.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_char(words, len, result, 'f', 0, true);
 
@@ -203,13 +206,13 @@ namespace coretest
 		TEST_METHOD(TestGenCharNNF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 			//output(path, len, words, len);
 
 			int ans = gen_chain_char(words, len, result, 0, 0, false);
@@ -222,12 +225,12 @@ namespace coretest
 		TEST_METHOD(TestGenCharNFF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_char(words, len, result, 0, 'm', false);
 
@@ -239,12 +242,12 @@ namespace coretest
 		TEST_METHOD(TestGenCharFNF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_char(words, len, result, 'p', 0, false);
 
@@ -256,13 +259,13 @@ namespace coretest
 		TEST_METHOD(TestGenWordNNF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 			//output(path, len, words, len);
 
 			int ans = gen_chain_word(words, len, result, 0, 0, false);
@@ -275,12 +278,12 @@ namespace coretest
 		TEST_METHOD(TestGenWordNFF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_word(words, len, result, 0, 'm', false);
 
@@ -292,12 +295,12 @@ namespace coretest
 		TEST_METHOD(TestGenWordFNF)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_word(words, len, result, 'p', 0, false);
 
@@ -309,12 +312,12 @@ namespace coretest
 		TEST_METHOD(TestGenWordUniq)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chain_word_unique(words, len, result);
 
@@ -326,12 +329,12 @@ namespace coretest
 		TEST_METHOD(TestGenAll)
 		{
 
-			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input3.txt";
+			char filename[100] = "../test/input3.txt";
 
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "E:/softengine/LongestEnglishWordChain/test/output.txt";
+			char path[100] = "../test/output.txt";
 
 			int ans = gen_chains_all(words, len, result);
 
