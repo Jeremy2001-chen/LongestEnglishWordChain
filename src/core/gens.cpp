@@ -131,6 +131,7 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 	int dp[MAXN_POINT], preEdge[MAXN_POINT];
 	memset(dp, 0, SET_SIZE << 2);
 	memset(preEdge, 0, SET_SIZE << 2);
+
 	int* first = noSelfLoopGraph->getFirst();
 	for (int i = 0; i < SET_SIZE; i++) {
 		int x = topo[i];
@@ -142,6 +143,15 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 			}
 		}
 	}
+
+	// only destinantion can have selfloop
+	for (int i = 0; i < 26; i++) {
+		int i_weight = noSelfLoopGraph->getPointWeight(i);
+		if (i_weight > 0) {
+			dp[i] += 1;
+		}
+	}
+
 	int maxa = 0;
 	for (int i = 1; i < SET_SIZE; i++) {
 		if (dp[i] > dp[maxa]) {
@@ -158,6 +168,15 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 	chain_count = 1;
 
 	int now = maxa;
+	// self loop for destination
+	int now_weight = noSelfLoopGraph->getPointWeight(now);
+	if (now_weight > 0) {
+		int* first = noSelfLoopGraph->getSelfEdgeFirst();
+		int e = first[now];
+		chain->push_back(noSelfLoopGraph->getEdgeWord(e));
+		length++;
+	}
+
 	while (preEdge[now] > 0) {
 		int e = preEdge[now];
 		int from = noSelfLoopGraph->getEdgeStart(e);
@@ -165,6 +184,7 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 		length++;
 		now = from;
 	}
+
 	save_chain_reverse(result, length);
 	return length;
 }
