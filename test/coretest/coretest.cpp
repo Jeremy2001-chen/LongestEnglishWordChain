@@ -343,5 +343,23 @@ namespace coretest
 			Assert::AreEqual(ans, 12);
 
 		}
+
+		TEST_METHOD(TestGenCharNNF6)
+		{
+
+			char filename[100] = "../test/input6.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, false);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 3);
+
+		}
 	};
 }

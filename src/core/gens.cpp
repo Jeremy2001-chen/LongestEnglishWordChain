@@ -821,7 +821,6 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 	gen_chain_char_dp_loop(dp, head, weight, preEdge, preSCCPoint,
 		noLoopGraph, subLoopGraph, subGraphCnt, topo, pointColor);
 
-
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -903,6 +902,16 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		}
 	}
 
+	for (int i = 0; i < SET_SIZE; i++) {
+		cout << dp[i] << " ";
+	}
+	cout << endl;
+
+	for (int i = 0; i < SET_SIZE; i++) {
+		cout << dpCnt[i] << " ";
+	}
+	cout << endl;
+
 	// get end points
 	int maxa = 0;
 	if (tail == 0) {
@@ -924,8 +933,11 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 	int length = 0;
 	chain_count = 1;
 
+
+
 	int now = maxa;
 	while (preEdge[now] > 0) {
+		cout << now << endl;
 		int e = preEdge[now];
 		int now_weight = noSelfLoopGraph->getPointWeight(now);
 		if (now_weight > 0) {
@@ -940,6 +952,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		length++;
 		now = from;
 	}
+	cout << now << endl;
 	int now_weight = noSelfLoopGraph->getPointWeight(now);
 	if (now_weight > 0) {
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();

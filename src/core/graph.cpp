@@ -151,6 +151,8 @@ void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph) {
 	Graph* crossGraph = new Graph(point_count);
 
 	int ind[MAXN_POINT], oud[MAXN_POINT];
+	memset(ind, 0, (SET_SIZE << 2));
+	memset(oud, 0, (SET_SIZE << 2));
 
 	for (int i = 0; i < SET_SIZE; i++) {
 		int* first = noSelfLoopGraph->getFirst();
