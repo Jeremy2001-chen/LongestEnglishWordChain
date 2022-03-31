@@ -88,5 +88,33 @@ namespace outputtest
 			//char* result[20] = {"ab", "bc"};
 			output(path, len, words, len);
 		}
+
+		TEST_METHOD(TestRepeat)
+		{
+			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input1.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[200] = "E:/softengine/LongestEnglishWordChain/test/";
+
+			int ans = 2;
+			//char* result[20] = {"ab", "bc"};
+			output(path, len, words, len);
+		}
+
+		TEST_METHOD(TestDisturbing)
+		{
+			char filename[100] = "E:/softengine/LongestEnglishWordChain/test/input12.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[200] = "E:/softengine/LongestEnglishWordChain/test/";
+
+			int ans = 2;
+			//char* result[20] = {"ab", "bc"};
+			output(path, len, words, len);
+		}
 	};
 }
