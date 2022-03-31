@@ -90,111 +90,132 @@ namespace wordtest
 			fclose(file);
 		}
 
-		TEST_METHOD(TestGenWordUniqNo0)
-		{
-			char filename[100] = "../test/input.txt";
-
+		void gen_word_nnf(char filename[], int std_ans) {
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "../test/output.txt";
 
-			int ans = gen_chain_word_unique(words, len, result);
+			char path[100] = "../test/output.txt";
+			//output(path, len, words, len);
+
+			int ans = gen_chain_word(words, len, result, 0, 0, false);
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
-
+			Assert::AreEqual(ans, std_ans);
 		}
 
-		TEST_METHOD(TestGenWordUniqNo1)
+		TEST_METHOD(TestGenWordNNF)
 		{
 
-			char filename[100] = "../test/input1.txt";
-
-			int len = 0;
-			int r = handleInput(filename, words, &len);
-
-			char path[100] = "../test/output.txt";
-
-			int ans = gen_chain_word_unique(words, len, result);
-
-			output(path, ans, result, (ans > 0));
-
-			Assert::AreEqual(ans, -1);
-
+			char filename[10][100] = { "../test/input.txt",
+										"../test/input1.txt",
+										"../test/input2.txt",
+										"../test/input3.txt",
+										"../test/input4.txt",
+										"../test/input5.txt",
+										};
+			int std_ans[10] = { -1, -1, -1, 4, -1, 2 };
+			for (int i = 0; i < 6; i++) {
+				gen_word_nnf(filename[i], std_ans[i]);
+			}
 		}
 
-		TEST_METHOD(TestGenWordUniqNo2)
-		{
-
-			char filename[100] = "../test/input2.txt";
-
+		void gen_word_fff(char filename[], int std_ans, char head, char tail) {
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "../test/output.txt";
 
-			int ans = gen_chain_word_unique(words, len, result);
+			char path[100] = "../test/output.txt";
+			//output(path, len, words, len);
+
+			int ans = gen_chain_word(words, len, result, head, tail, false);
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
-
+			Assert::AreEqual(ans, std_ans);
 		}
 
-		TEST_METHOD(TestGenWordUniqNo3)
+		TEST_METHOD(TestGenWordFFF)
 		{
 
-			char filename[100] = "../test/input3.txt";
-
-			int len = 0;
-			int r = handleInput(filename, words, &len);
-
-			char path[100] = "../test/output.txt";
-
-			int ans = gen_chain_word_unique(words, len, result);
-
-			output(path, ans, result, (ans > 0));
-
-			Assert::AreEqual(ans, 3);
-
+			char filename[10][100] = { "../test/input.txt",
+										"../test/input1.txt",
+										"../test/input2.txt",
+										"../test/input3.txt",
+										"../test/input4.txt",
+										"../test/input5.txt",
+			};
+			int std_ans[10] = { -1, -1, -1, 2, -1, 2 };
+			char head[10] = { 0, 0, 0, 'p', 0, 'a' };
+			char tail[10] = { 0, 0, 0, 'm', 0, 'b' };
+			for (int i = 0; i < 6; i++) {
+				gen_word_fff(filename[i], std_ans[i], head[i], tail[i]);
+			}
 		}
 
-		TEST_METHOD(TestGenWordUniqNo4)
-		{
-
-			char filename[100] = "../test/input4.txt";
-
+		void gen_word_nnt(char filename[], int std_ans) {
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "../test/output.txt";
 
-			int ans = gen_chain_word_unique(words, len, result);
+			char path[100] = "../test/output.txt";
+			//output(path, len, words, len);
+
+			int ans = gen_chain_word(words, len, result, 0, 0, true);
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
-
+			Assert::AreEqual(ans, std_ans);
 		}
 
-		TEST_METHOD(TestGenWordUniqNo5)
+		TEST_METHOD(TestGenWordNNT)
 		{
 
-			char filename[100] = "../test/input5.txt";
+			char filename[10][100] = { "../test/input.txt",
+										"../test/input1.txt",
+										"../test/input2.txt",
+										"../test/input3.txt",
+										"../test/input4.txt",
+										"../test/input5.txt",
+			};
+			int std_ans[10] = { 14, 12, 5, 4, 4, 2 };
+			for (int i = 0; i < 6; i++) {
+				gen_word_nnt(filename[i], std_ans[i]);
+			}
+		}
 
+		void gen_word_fft(char filename[], int std_ans, char head, char tail) {
 			int len = 0;
 			int r = handleInput(filename, words, &len);
 
-			char path[100] = "../test/output.txt";
 
-			int ans = gen_chain_word_unique(words, len, result);
+			char path[100] = "../test/output.txt";
+			//output(path, len, words, len);
+
+			int ans = gen_chain_word(words, len, result, head, tail, true);
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, 2);
+			Assert::AreEqual(ans, std_ans);
+		}
 
+		TEST_METHOD(TestGenWordFFT)
+		{
+
+			char filename[10][100] = { "../test/input.txt",
+										"../test/input1.txt",
+										"../test/input2.txt",
+										"../test/input3.txt",
+										"../test/input4.txt",
+										"../test/input5.txt",
+			};
+			int std_ans[10] = { 0, 12, 5, 2, 4, 2 };
+			char head[10] = { 'f', 'w', 0, 'p', 0, 'a'};
+			char tail[10] = { 'a', 'm', 0, 'm', 0, 'b'};
+			for (int i = 0; i < 6; i++) {
+				gen_word_fft(filename[i], std_ans[i], head[i], tail[i]);
+			}
 		}
 	};
 }

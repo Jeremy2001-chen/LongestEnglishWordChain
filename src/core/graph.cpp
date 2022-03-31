@@ -144,3 +144,54 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 	(* noLoopGraph) = crossGraph;
 	(*subGraphCnt) = blockNum;
 }
+
+void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph) {
+
+	int point_count = noSelfLoopGraph->getPointCount();
+	Graph* crossGraph = new Graph(point_count);
+
+	int ind[MAXN_POINT], oud[MAXN_POINT];
+
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* first = noSelfLoopGraph->getFirst();
+		for (int e = first[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int t = noSelfLoopGraph->getEdgeEnd(e);
+			ind[t]++;
+			oud[s]++;
+		}
+	}
+
+	// for a none-self-loop-edge, we delete it when in[s] == 0 && oud[t] == 0 && s_weight == 0 && t_weight == 0
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* first = noSelfLoopGraph->getFirst();
+		for (int e = first[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int s_weight = noSelfLoopGraph->getPointWeight(s);
+			int t = noSelfLoopGraph->getEdgeEnd(e);
+			int t_weight = noSelfLoopGraph->getPointWeight(t);
+			if (ind[s] == 0 && oud[t] == 0 && s_weight == 0 && t_weight == 0)
+				continue;
+			int len = noSelfLoopGraph->getEdgeValue(e);
+			Word* word = noSelfLoopGraph->getEdgeWord(e);
+			crossGraph->link(s, t, len, word);
+		}
+	}
+
+	// for a self-loop-edge, we delete it when ind[x] == 0 && oud[x] == 0 && point_weigh[x] == 1
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* selfFirst = noSelfLoopGraph->getSelfEdgeFirst();
+		for (int e = selfFirst[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int s_weight = noSelfLoopGraph->getPointWeight(s);
+			if (ind[s] == 0 && oud[s] == 0 && s_weight == 1)
+				continue;
+			int len = noSelfLoopGraph->getEdgeValue(e);
+			Word* word = noSelfLoopGraph->getEdgeWord(e);
+			crossGraph->addPointWeight(s, len, word);
+		}
+	}
+
+
+	(*newNoSelfLoopGraph) = crossGraph;
+}

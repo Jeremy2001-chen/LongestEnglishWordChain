@@ -786,10 +786,17 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
+
+	// delete useless edges, incase of the misleading of single long word
+	Graph* tmpGraph;
+	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph);
+	noSelfLoopGraph = tmpGraph;
+
 	// get loopless graph
 	Graph* noLoopGraph;
 	int subGraphCnt;
 	int pointColor[MAXN_POINT];
+
 	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
 	printf("getting topo order...\n");
@@ -845,6 +852,12 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
+
+	// delete useless edges, incase of the misleading of single long word
+	Graph* tmpGraph;
+	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph);
+	noSelfLoopGraph = tmpGraph;
+
 	// get topo order
 	//printf("getting topo order...\n");
 	int topo[MAXN_POINT];
