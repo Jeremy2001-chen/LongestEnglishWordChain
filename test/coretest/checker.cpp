@@ -257,7 +257,7 @@ namespace autochecker
 
             Assert::AreEqual(ans, std_ans);
         }
-
+        /*
         TEST_METHOD(autotest0)
         {
 
@@ -271,6 +271,7 @@ namespace autochecker
                 }
             }
         }
+        */
 	};
 }
 

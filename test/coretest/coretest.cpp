@@ -361,5 +361,91 @@ namespace coretest
 			Assert::AreEqual(ans, 3);
 
 		}
+
+		TEST_METHOD(TestGenCharNNT7)
+		{
+
+			char filename[100] = "../test/input7.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, true);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 3);
+
+		}
+		TEST_METHOD(TestGenCharNNF8)
+		{
+
+			char filename[100] = "../test/input8.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, false);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 3);
+
+		}
+		TEST_METHOD(TestGenCharNNF9)
+		{
+
+			char filename[100] = "../test/input9.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, false);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 3);
+
+		}
+		TEST_METHOD(TestGenCharNNF10)
+		{
+
+			char filename[100] = "../test/input10.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, false);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 2);
+
+		}
+		TEST_METHOD(TestGenCharNNF11)
+		{
+
+			char filename[100] = "../test/input11.txt";
+
+			int len = 0;
+			int r = handleInput(filename, words, &len);
+
+			char path[100] = "../test/output.txt";
+
+			int ans = gen_chain_char(words, len, result, 0, 0, false);
+
+			output(path, ans, result, (ans > 0));
+
+			Assert::AreEqual(ans, 2);
+
+		}
 	};
 }
