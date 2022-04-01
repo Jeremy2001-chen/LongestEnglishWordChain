@@ -91,6 +91,11 @@ namespace coretest
 			fclose(file);
 		}
 
+		int judge(char* words[], char* result[], int ans) {
+			return 1;
+
+		}
+
 		// char wordlist[20][20] = { "aaa", "aba", "aca", "ab", "ba", "bb" };
 
 		// char *words[20] = { wordlist[0], wordlist[1], wordlist[2], wordlist[3], wordlist[4], wordlist[5]};

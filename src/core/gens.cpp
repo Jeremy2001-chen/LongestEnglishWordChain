@@ -83,14 +83,14 @@ int gen_chains_all(char* words[], int len, char* result[]) {
 	Graph* inputGraph, * noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 
-	int topo[MAXN_POINT];
+	/*int topo[MAXN_POINT];
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		printf("Error the graph have loop!\n");
 	}
 	else {
 		printf("Ok we don't have loop!\n");
-	}
+	}*/
 
 	//initial
 	chain = new vector<Word*>();
