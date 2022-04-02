@@ -23,10 +23,11 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     char* path = NULL;
     int r;
     start = 0; end = 0;
+    problemType = -1;
     for (int i = 1; i < argc; i++) {
         if (checkFilePath(argv[i])) {
             if (pathFind) {
-                cerr << "你指定多个文件路径，请仅指定单一路径!" << endl;
+                cerr << "指定了多个文件路径，请仅指定单一路径!" << endl;
                 return -Error::MULTI_FILE_PATH;
             }
             pathFind = true;
@@ -52,16 +53,32 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         }
         switch (argv[i][1]) {
         case CALCULATE_CHAIN_COUNT_PARAMETER:
-            problemType = WORD_CHAIN_COUNT_PROBLEM;
+            if (problemType > 0) {
+                cerr << "指定了多个任务，请仅指定一个任务！" << endl;
+                return -Error::MULTI_WORK_ERROR;
+            }
+            problemType = ProblemType::WORD_CHAIN_COUNT_PROBLEM;
             break;
         case CALCULATE_MAX_WORD_COUNT_PARAMETER:
-            problemType = WORD_CHAIN_MAX_WORD_PROBLEM;
+            if (problemType > 0) {
+                cerr << "指定了多个任务，请仅指定一个任务！" << endl;
+                return -Error::MULTI_WORK_ERROR;
+            }
+            problemType = ProblemType::WORD_CHAIN_MAX_WORD_PROBLEM;
             break;
         case CALCULATE_FIRST_CHAR_NOT_SAME_PARAMETER:
-            problemType = FIRST_CHAR_NOT_SAME_PROBLEM;
+            if (problemType > 0) {
+                cerr << "指定了多个任务，请仅指定一个任务！" << endl;
+                return -Error::MULTI_WORK_ERROR;
+            }
+            problemType = ProblemType::FIRST_CHAR_NOT_SAME_PROBLEM;
             break;
         case CALCULATE_MAX_CHAR_COUNT_PARAMETER:
-            problemType = WORD_CHAIN_MAX_CHAR_PROBLEM;
+            if (problemType > 0) {
+                cerr << "指定了多个任务，请仅指定一个任务！" << endl;
+                return -Error::MULTI_WORK_ERROR;
+            }
+            problemType = ProblemType::WORD_CHAIN_MAX_CHAR_PROBLEM;
             break;
         case SET_FIRST_CHAR:
         case SET_LAST_CHAR:
