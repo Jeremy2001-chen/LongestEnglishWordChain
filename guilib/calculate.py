@@ -6,7 +6,7 @@ import os
 def calculate(fileName, start, end, problemType, loopEnable):
     print(os.getcwd())
 
-    commandDLL = ctypes.windll.LoadLibrary("./command.dll")
+    commandDLL = ctypes.windll.LoadLibrary("./control.dll")
 
     call_func = commandDLL.call_by_cmd
 

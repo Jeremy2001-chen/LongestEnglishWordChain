@@ -15,7 +15,7 @@ void output(char* path, int ans, char* result[], int len) {
         }
 
     solutionPath += "solution.txt";
-    cout << "printing solutions: " << exePath << "  " << solutionPath << endl;
+    //cout << "printing solutions: " << exePath << "  " << solutionPath << endl;
     ofstream sout(solutionPath);
 
     sout << ans << endl;
