@@ -25,6 +25,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     start = 0; end = 0;
     problemType = -1;
     start = end = 0;
+    loop_enable = false;
     for (int i = 1; i < argc; i++) {
         if (checkFilePath(argv[i])) {
             if (pathFind) {
@@ -109,6 +110,10 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             }
             break;
         case SET_ALLOC_LOOP:
+            if (loop_enable) {
+                cerr << "重复指定有环参数!" << endl;
+                return -Error::ENABLE_LOOP_DUPLICATE;
+            }
             loop_enable = true;
             break;
         default:
