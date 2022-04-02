@@ -24,6 +24,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     int r;
     start = 0; end = 0;
     problemType = -1;
+    start = end = 0;
     for (int i = 1; i < argc; i++) {
         if (checkFilePath(argv[i])) {
             if (pathFind) {
@@ -87,12 +88,16 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
                 cerr << "指定首尾字母时忘记字母参数!" << endl;
                 return -Error::NO_CHAR_ERROR;
             }
-            r = checkChar(argv[i++]);
+            r = checkChar(argv[++i]);
             if (!r) {
                 cerr << "指定字母时格式不正确！只允许指定大小写字母！" << endl;
                 return -Error::CHAR_FORM_ERROR;
             }
             if (type == SET_FIRST_CHAR) {
+                if (start > 0) {
+                    cerr << "重复指定首字母！" << endl;
+                    return -Error::FIRST_CHAR_DUPLICATE;
+                }
                 start = argv[i][0];
             }
             else {
