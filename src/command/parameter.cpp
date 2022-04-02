@@ -67,13 +67,13 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         case SET_LAST_CHAR:
             type = argv[i][1];
             if (i == argc - 1) {
-                cerr << "指定首尾字母时忘记字母参数" << endl;
+                cerr << "指定首尾字母时忘记字母参数!" << endl;
                 return -Error::NO_CHAR_ERROR;
             }
-            r = checkChar(argv[++i]);
+            r = checkChar(argv[i++]);
             if (!r) {
-                cout << "Character not correct!" << endl;
-                return -CHAR_FORM_ERROR;
+                cerr << "指定字母时格式不正确！只允许指定大小写字母！" << endl;
+                return -Error::CHAR_FORM_ERROR;
             }
             if (type == SET_FIRST_CHAR) {
                 start = argv[i][0];

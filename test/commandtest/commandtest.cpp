@@ -79,5 +79,19 @@ namespace commandtest
 			r = parameterExtract(argv, 2, problemType, loop_enable, start, end, &name);
 			Assert::AreEqual(r, (int)-Error::NO_CHAR_ERROR);
 		}
+
+		TEST_METHOD(WRONG_CHAR_FORM)
+		{
+			char* argv[] = { "Wordlist.exe", "-h", "%"};
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 3, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::CHAR_FORM_ERROR);
+
+			argv[2] = "-t";
+			r = parameterExtract(argv, 3, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::CHAR_FORM_ERROR);
+		}
 	};
 }
