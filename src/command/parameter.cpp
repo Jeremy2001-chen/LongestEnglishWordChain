@@ -125,5 +125,13 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         cerr << "参数中不存在文件路径!" << endl;
         return -Error::NO_FILE_PATH;
     }
+    if ((start > 0 || end > 0 || loop_enable) && (problemType == ProblemType::WORD_CHAIN_COUNT_PROBLEM)) {
+        cerr << "-n参数不支持和其他参数共同使用!" << endl;
+        return -Error::N_WORK_WITH_OTHER_PARAMETER;
+    }
+    if ((start > 0 || end > 0 || loop_enable) && (problemType == ProblemType::FIRST_CHAR_NOT_SAME_PROBLEM)) {
+        cerr << "-m参数不支持和其他参数共同使用!" << endl;
+        return -Error::M_WORK_WITH_OTHER_PARAMETER;
+    }
     return 0;
 }

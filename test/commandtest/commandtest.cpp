@@ -30,7 +30,9 @@ namespace commandtest
 			MULTI_WORK_ERROR,
 			FIRST_CHAR_DUPLICATE,
 			FINAL_CHAR_DUPLICATE,
-			ENABLE_LOOP_DUPLICATE
+			ENABLE_LOOP_DUPLICATE,
+			N_WORK_WITH_OTHER_PARAMETER,
+			M_WORK_WITH_OTHER_PARAMETER
 		};
 
 		TEST_METHOD(MULT_PATH_FILE_ERROR)
@@ -137,6 +139,20 @@ namespace commandtest
 			char* name;
 			int r = parameterExtract(argv, 3, problemType, loop_enable, start, end, &name);
 			Assert::AreEqual(r, (int)-Error::ENABLE_LOOP_DUPLICATE);
+		}
+
+		TEST_METHOD(PARAMETER_CONFLICT)
+		{
+			char* argv[] = { "Wordlist.exe", "-n", "-r", "../test/input1.txt" };
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::N_WORK_WITH_OTHER_PARAMETER);
+
+			argv[1] = "-m";
+			r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::M_WORK_WITH_OTHER_PARAMETER);
 		}
 	};
 }
