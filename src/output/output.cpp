@@ -7,12 +7,14 @@ using namespace std;
 
 void output(char* path, int ans, char* result[], int len) {
     string exePath = path, solutionPath = "";
-    if (exePath.find('\\') == exePath.npos) {
-        solutionPath = ".\\solution.txt";
-    }
-    else {
-        solutionPath = exePath.substr(0, exePath.find_last_of('\\')) + "\\solution.txt";
-    }
+    for (int i = (int)exePath.size() - 1; i >= 0; --i)
+        if (exePath[i] == '\\' || exePath[i] == '/') {
+            for (int j = 0; j <= i; ++j)
+                solutionPath += exePath[j];
+            break;
+        }
+
+    solutionPath += "solution.txt";
     cout << "printing solutions: " << exePath << "  " << solutionPath << endl;
     ofstream sout(solutionPath);
 

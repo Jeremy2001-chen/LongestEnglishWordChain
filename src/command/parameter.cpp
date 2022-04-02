@@ -24,10 +24,11 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     int r;
     start = 0; end = 0;
     for (int i = 1; i < argc; i++) {
+        cout << argv[i] << endl;
         if (checkFilePath(argv[i])) {
             if (pathFind) {
-                cout << "You have done multi file path!" << endl;
-                return -MULTI_FILE_PATH;
+                cerr << "You have multi file path!" << endl;
+                return -Error::MULTI_FILE_PATH;
             }
             pathFind = true;
             int len = strlen(argv[i]);
@@ -44,7 +45,6 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
                 (*tmp) = '\0';
                 (*name) = path;
             }
-            i++;
             continue;
         }
         if (strlen(argv[i]) != 2 || argv[i][0] != '-') {

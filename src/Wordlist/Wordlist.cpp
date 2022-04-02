@@ -14,11 +14,14 @@ char* wordList[MAXN_WORD];
 
 int main(int argc, char *argv[])
 {
-    return 0;
     int problemType, start = 0, end = 0;
     bool loop_enable = false;
     char* name;
-    int r = parameterExtract(argv, argc, problemType, loop_enable, start, end, &name);
+    char* args[] = { "Wordlist.exe", "-n", "../test/input1.txt"};
+    argc = 3;
+    int r = parameterExtract(args, argc, problemType, loop_enable, start, end, &name);
+    system("pause");
+
     if (r < 0) {
         return 0;
     }
@@ -26,26 +29,26 @@ int main(int argc, char *argv[])
     static int wordCount = 0;
     handleInput(name, wordList, &wordCount);
 
-    cout << wordCount << endl;
+    //cout << wordCount << endl;
     int tot = 0;
     switch (problemType) {
-    case WORD_CHAIN_COUNT_PROBLEM:
+    case Problem::WORD_CHAIN_COUNT_PROBLEM:
         tot = gen_chains_all(wordList, wordCount, result);
         output(name, tot, result, tot);
         break;
-    case FIRST_CHAR_NOT_SAME_PROBLEM:
+    case Problem::FIRST_CHAR_NOT_SAME_PROBLEM:
         tot = gen_chain_word_unique(wordList, wordCount, result);
         output(name, tot, result, (tot > 0));
         break;
-    case WORD_CHAIN_MAX_WORD_PROBLEM:
+    case Problem::WORD_CHAIN_MAX_WORD_PROBLEM:
         tot = gen_chain_word(wordList, wordCount, result, start, end, loop_enable);
         output(name, tot, result, (tot > 0));
         break;
-    case WORD_CHAIN_MAX_CHAR_PROBLEM:
+    case Problem::WORD_CHAIN_MAX_CHAR_PROBLEM:
         tot = gen_chain_char(wordList, wordCount, result, start, end, loop_enable);
         output(name, tot, result, (tot > 0));
         break;
     }
-    system("pause");
+
     return 0;
 }
