@@ -23,7 +23,7 @@ namespace commandtest
 			PARAMETER_NOT_EXISTS,
 			NO_FILE_PATH,
 			FILE_PATH_FORM_ERROR,
-			NO_CHAR,
+			NO_CHAR_ERROR,
 			CHAR_FORM_ERROR,
 			PARAMETER_FORM_ERROR,
 			ALLOC_MEMORY_ERROR,
@@ -64,6 +64,20 @@ namespace commandtest
 			char* name;
 			int r = parameterExtract(argv, 2, problemType, loop_enable, start, end, &name);
 			Assert::AreEqual(r, (int)-Error::NO_FILE_PATH);
+		}
+
+		TEST_METHOD(NO_CHAR)
+		{
+			char* argv[] = { "Wordlist.exe", "-h" };
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 2, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::NO_CHAR_ERROR);
+		
+			argv[1] = "-t";
+			r = parameterExtract(argv, 2, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::NO_CHAR_ERROR);
 		}
 	};
 }

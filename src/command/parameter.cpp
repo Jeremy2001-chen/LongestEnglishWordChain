@@ -47,7 +47,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             continue;
         }
         if (strlen(argv[i]) != 2 || argv[i][0] != '-') {
-            cout << "参数不存在，请重新输入!" << endl;
+            cerr << "参数不存在，请重新输入!" << endl;
             return -Error::PARAMETER_NOT_EXISTS;
         }
         switch (argv[i][1]) {
@@ -67,8 +67,8 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         case SET_LAST_CHAR:
             type = argv[i][1];
             if (i == argc - 1) {
-                cout << "Parameter forget the file path!" << endl;
-                return -NO_CHAR;
+                cerr << "指定首尾字母时忘记字母参数" << endl;
+                return -Error::NO_CHAR_ERROR;
             }
             r = checkChar(argv[++i]);
             if (!r) {
