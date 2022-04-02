@@ -5,7 +5,7 @@
 #include "graph.h"
 #include "word.h"
 #include "gens.h"
-
+#include <cassert>
 
 int chain_count = 0;
 
@@ -97,14 +97,12 @@ int gen_chains_all(char* words[], int len, char* result[]) {
 	Graph* inputGraph, * noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 
-	/*int topo[MAXN_POINT];
-	int r = topoSort(noSelfLoopGraph, topo);
+	int topo[MAXN_POINT];
+	r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
-		printf("Error the graph have loop!\n");
+		cerr << "单词表中包含隐藏环" << endl;
+		return -Error::HAVE_LOOP;
 	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}*/
 
 	//initial
 	chain = new vector<Word*>();
@@ -138,11 +136,8 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 	int topo[MAXN_POINT];
 	r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
-		printf("Error the graph have loop!\n");
-		return r;
-	}
-	else {
-		printf("Ok we don't have loop!\n");
+		cerr << "单词表中包含隐藏环" << endl;
+		return -Error::HAVE_LOOP;
 	}
 
 	// dp
@@ -448,12 +443,8 @@ int gen_chain_word_loop(char* words[], int len, char* result[], char head, char 
 	//printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
 	int r = topoSort(noLoopGraph, topo);
-	if (r < 0) {
-		printf("Error the graph have loop!\n");
-	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
+	assert(r == 0);
+
 	//get sub graph max dist
 	get_sub_graph_max_dist_word(subLoopGraph, subGraphCnt, pointColor);
 	// get start points
@@ -501,12 +492,10 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 	int topo[MAXN_POINT];
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
-		printf("Error the graph have loop!\n");
-		return r;
+		cerr << "单词表中包含隐藏环" << endl;
+		return -Error::HAVE_LOOP;
 	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
+
 	// get start points
 	int dp[MAXN_POINT], preEdge[MAXN_POINT];
 	if (head == 0) {
@@ -826,12 +815,8 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 	//printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
 	int r = topoSort(noLoopGraph, topo);
-	if (r < 0) {
-		printf("Error the graph have loop!\n");
-	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
+	assert(r == 0);
+
 	//get sub graph max dist
 	get_sub_graph_max_dist_char(subLoopGraph, subGraphCnt, pointColor);
 	// get start points
@@ -885,12 +870,10 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 	int topo[MAXN_POINT];
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
-		printf("Error the graph have loop!\n");
-		return r;
+		cerr << "单词表中包含隐藏环" << endl;
+		return -Error::HAVE_LOOP;
 	}
-	else {
-		printf("Ok we don't have loop!\n");
-	}
+
 	// get start points
 	int dp[MAXN_POINT], preEdge[MAXN_POINT], dpCnt[MAXN_POINT];
 	if (head == 0) {

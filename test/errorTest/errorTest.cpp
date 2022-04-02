@@ -42,7 +42,8 @@ namespace errorTest
 			ENABLE_LOOP_DUPLICATE,
 			N_WORK_WITH_OTHER_PARAMETER,
 			M_WORK_WITH_OTHER_PARAMETER,
-			WORD_NOT_AVAILABLE
+			WORD_NOT_AVAILABLE,
+			HAVE_LOOP
 		};
 
 		TEST_METHOD(MULT_PATH_FILE_ERROR)
@@ -200,6 +201,23 @@ namespace errorTest
 
 			r = gen_chain_word(words, len, result, 'a', 'z', false);
 			Assert::AreEqual(r, (int)-Error::WORD_NOT_AVAILABLE);
+		}
+
+		TEST_METHOD(LOOP_CHECK)
+		{
+			char* words[4] = { "gg", "abc", "cde", "ea"};
+			char* result[10];
+			int r = gen_chain_word_unique(words, 3, result);
+			Assert::AreEqual(r, (int)-Error::HAVE_LOOP);
+
+			r = gen_chains_all(words, 3, result);
+			Assert::AreEqual(r, (int)-Error::HAVE_LOOP);
+
+			r = gen_chain_char(words, 3, result, 'a', 'z', false);
+			Assert::AreEqual(r, (int)-Error::HAVE_LOOP);
+
+			r = gen_chain_word(words, 3, result, 'a', 'z', false);
+			Assert::AreEqual(r, (int)-Error::HAVE_LOOP);
 		}
 	};
 }
