@@ -14,6 +14,7 @@ int handleInput(char* fileName, char* word[], int* len){
 	FILE* file;
 	int r = fopen_s(&file, fileName, "r");
 	if (file == NULL) {
+		cerr << "单词表所在文件不存在！" << endl;
 		return -FILE_NOT_FIND; //todo
 	}
 	else {
