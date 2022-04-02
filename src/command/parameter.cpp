@@ -24,7 +24,6 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     int r;
     start = 0; end = 0;
     for (int i = 1; i < argc; i++) {
-        cout << argv[i] << endl;
         if (checkFilePath(argv[i])) {
             if (pathFind) {
                 cerr << "你指定多个文件路径，请仅指定单一路径!" << endl;
@@ -87,13 +86,13 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             loop_enable = true;
             break;
         default:
-            cout << "参数不存在，请重新输入!" << endl;
-            return -PARAMETER_NOT_EXISTS;
+            cerr << "参数不存在，请重新输入!" << endl;
+            return -Error::PARAMETER_NOT_EXISTS;
         }
     }
     if (path == NULL) {
-        cout << "Path not exists!" << endl;
-        return -PATH_NOT_EXISTS;
+        cerr << "参数中不存在文件路径!" << endl;
+        return -Error::NO_FILE_PATH;
     }
     return 0;
 }
