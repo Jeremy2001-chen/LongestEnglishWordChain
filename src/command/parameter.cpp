@@ -101,6 +101,10 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
                 start = argv[i][0];
             }
             else {
+                if (end > 0) {
+                    cerr << "ÖØ¸´Ö¸¶¨Î²×ÖÄ¸£¡" << endl;
+                    return -Error::FINAL_CHAR_DUPLICATE;
+                }
                 end = argv[i][0];
             }
             break;

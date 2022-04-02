@@ -28,7 +28,8 @@ namespace commandtest
 			PARAMETER_FORM_ERROR,
 			ALLOC_MEMORY_ERROR,
 			MULTI_WORK_ERROR,
-			FIRST_CHAR_DUPLICATE
+			FIRST_CHAR_DUPLICATE,
+			FINAL_CHAR_DUPLICATE
 		};
 
 		TEST_METHOD(MULT_PATH_FILE_ERROR)
@@ -115,6 +116,16 @@ namespace commandtest
 			char* name;
 			int r = parameterExtract(argv, 6, problemType, loop_enable, start, end, &name);
 			Assert::AreEqual(r, (int)-Error::FIRST_CHAR_DUPLICATE);
+		}
+
+		TEST_METHOD(FINAL_CHAR_DUP)
+		{
+			char* argv[] = { "Wordlist.exe", "-t", "a", "-t", "b", "-n" };
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 6, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::FINAL_CHAR_DUPLICATE);
 		}
 	};
 }
