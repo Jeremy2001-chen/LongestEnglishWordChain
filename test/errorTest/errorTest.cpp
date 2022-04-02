@@ -41,7 +41,8 @@ namespace errorTest
 			FINAL_CHAR_DUPLICATE,
 			ENABLE_LOOP_DUPLICATE,
 			N_WORK_WITH_OTHER_PARAMETER,
-			M_WORK_WITH_OTHER_PARAMETER
+			M_WORK_WITH_OTHER_PARAMETER,
+			WORD_NOT_AVAILABLE
 		};
 
 		TEST_METHOD(MULT_PATH_FILE_ERROR)
@@ -171,6 +172,34 @@ namespace errorTest
 			int len = 0;
 			int r = handleInput(fileName, word, &len);
 			Assert::AreEqual(r, (int)-Error::FILE_NOT_FIND);
+		}
+
+		TEST_METHOD(NO_FILE_ERR)
+		{
+			char fileName[100] = "../test/input0.txt";
+			char* word[500];
+			int len = 0;
+			int r = handleInput(fileName, word, &len);
+			Assert::AreEqual(r, (int)-Error::FILE_NOT_FIND);
+		}
+
+		TEST_METHOD(WORD_NOT_AVAIL)
+		{
+			char* words[4] = { "abc", "edfg", NULL, NULL};
+
+			char* result[10];
+			int len = 4;
+			int r = gen_chain_word_unique(words, len, result);
+			Assert::AreEqual(r, (int)-Error::WORD_NOT_AVAILABLE);
+
+			r = gen_chains_all(words, len, result);
+			Assert::AreEqual(r, (int)-Error::WORD_NOT_AVAILABLE);
+
+			r = gen_chain_char(words, len, result, 'a', 'z', false);
+			Assert::AreEqual(r, (int)-Error::WORD_NOT_AVAILABLE);
+
+			r = gen_chain_word(words, len, result, 'a', 'z', false);
+			Assert::AreEqual(r, (int)-Error::WORD_NOT_AVAILABLE);
 		}
 	};
 }

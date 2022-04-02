@@ -58,7 +58,7 @@ int topoSort(Graph* graph, int* sort) {
 	cout << head << " " << tail << " " << tot << endl;
 	*/
 	if (tail != tot) {
-		return -HAVE_LOOP;
+		return -Error::HAVE_LOOP;
 	}
 
 	return 0;

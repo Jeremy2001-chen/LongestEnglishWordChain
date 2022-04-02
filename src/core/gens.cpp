@@ -11,6 +11,15 @@ int chain_count = 0;
 
 vector<Word*>* chain;
 
+int checkWordAvailable(char* words[], int len) {
+	for (int i = 1; i <= len; ++i)
+		if (words[i] == NULL) {
+			cerr << "传入接口的单词表有误，存在空单词，请检查单词合法性" << endl;
+			return -WORD_NOT_AVAILABLE;
+		}
+	return 0;
+}
+
 int vist[MAXN_WORD];
 
 void save_chain(char* result[], int length) {
@@ -80,6 +89,11 @@ void dfs_chain(int x, Graph* graph, int length, char* result[]) {
 
 //int gen_chains_all(Word* word[], int len, char* result[]) {
 int gen_chains_all(char* words[], int len, char* result[]) {
+	int r = checkWordAvailable(words, len);
+	if (r < 0) {
+		return r;
+	}
+
 	Graph* inputGraph, * noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 
@@ -111,13 +125,18 @@ int gen_chains_all(char* words[], int len, char* result[]) {
 // job 2
 
 int gen_chain_word_unique(char* words[], int len, char* result[]) {
+	int r = checkWordAvailable(words, len);
+	if (r < 0) {
+		return r;
+	}
+
 	// get graph
 	Graph* inputGraph, *noSelfLoopGraph;
 	buildGraph(&inputGraph, &noSelfLoopGraph, words, len);
 
 	// get topo order
 	int topo[MAXN_POINT];
-	int r = topoSort(noSelfLoopGraph, topo);
+	r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		printf("Error the graph have loop!\n");
 		return r;
@@ -566,6 +585,10 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 }
 
 int gen_chain_word(char* words[], int len, char* result[], char head, char tail, bool enable_loop) {
+	int r = checkWordAvailable(words, len);
+	if (r < 0) {
+		return r;
+	}
 	if (enable_loop) {
 		return gen_chain_word_loop(words, len, result, head, tail);
 	}
@@ -966,6 +989,10 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 }
 
 int gen_chain_char(char* words[], int len, char* result[], char head, char tail, bool enable_loop) {
+	int r = checkWordAvailable(words, len);
+	if (r < 0) {
+		return r;
+	}
 	if (enable_loop) {
 		return gen_chain_char_loop(words, len, result, head, tail);
 	}
