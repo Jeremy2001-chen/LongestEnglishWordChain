@@ -1,12 +1,9 @@
 #ifndef _PARAMETER_H_
 #define _PARAMETER_H_
 
-#define MAXN_WORD 20202
+#include "pch.h"
 
-#ifdef IMPORT_DLL
-#else
-#define IMPORT_DLL extern "C" _declspec(dllimport)
-#endif
+#define MAXN_WORD 20202
 
 IMPORT_DLL int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable, int& start, int& end, char** name);
 

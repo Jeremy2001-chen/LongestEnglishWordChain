@@ -5,6 +5,8 @@
 
 using namespace std;
 
+char pipeError[] = "Pipe create error, please retry!";
+
 char* call_by_cmd(int len, char* cmd) {
 	string command, result = "";
 	for (int i = 0; i < len; i++)
@@ -12,9 +14,8 @@ char* call_by_cmd(int len, char* cmd) {
 	command += " 2>&1";
 
 	FILE* pipe = _popen(command.c_str(), "r");
-	if (pipe < 0) {
-		char* error = "Pipe create error, please retry!";
-		return error;
+	if (!pipe) {
+		return pipeError;
 	}
 
 	char buffer[256];

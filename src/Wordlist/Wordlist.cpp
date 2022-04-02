@@ -14,12 +14,13 @@ char* wordList[MAXN_WORD];
 
 int main(int argc, char *argv[])
 {
+    return 0;
     int problemType, start = 0, end = 0;
     bool loop_enable = false;
     char* name;
     int r = parameterExtract(argv, argc, problemType, loop_enable, start, end, &name);
     if (r < 0) {
-        exit(1);
+        return 0;
     }
     
     static int wordCount = 0;
@@ -45,6 +46,6 @@ int main(int argc, char *argv[])
         output(name, tot, result, (tot > 0));
         break;
     }
-
+    system("pause");
     return 0;
 }
