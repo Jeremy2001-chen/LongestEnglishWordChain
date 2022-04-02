@@ -22,6 +22,16 @@
 /src/output/*.sln
 /src/output/*.vcxproj*
 /src/output/TestResults
+/src/command/.vs
+/src/command/x64
+/src/command/*.sln
+/src/command/*.vcxproj*
+/src/command/TestResults
+/src/controll/.vs
+/src/controll/x64
+/src/controll/*.sln
+/src/controll/*.vcxproj*
+/src/controll/TestResults
 /bin/*.lib
 /bin/solution.txt
 /bin/*.exp
