@@ -6,7 +6,13 @@
 using namespace std;
 
 void output(char* path, int ans, char* result[], int len) {
-    string exePath = path, solutionPath = exePath.substr(0, exePath.find_last_of('\\')) + "\\solution.txt";
+    string exePath = path, solutionPath = "";
+    if (exePath.find('\\') == exePath.npos) {
+        solutionPath = ".\\solution.txt";
+    }
+    else {
+        solutionPath = exePath.substr(0, exePath.find_last_of('\\')) + "\\solution.txt";
+    }
     cout << "printing solutions: " << exePath << "  " << solutionPath << endl;
     ofstream sout(solutionPath);
 
