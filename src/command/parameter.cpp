@@ -27,15 +27,15 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         cout << argv[i] << endl;
         if (checkFilePath(argv[i])) {
             if (pathFind) {
-                cerr << "You have multi file path!" << endl;
+                cerr << "你指定多个文件路径，请仅指定单一路径!" << endl;
                 return -Error::MULTI_FILE_PATH;
             }
             pathFind = true;
             int len = strlen(argv[i]);
             path = (char*)malloc(static_cast<size_t>((size_t)len + 1));
             if (path == NULL) {
-                cout << "alloc memory error!" << endl;
-                return -ALLOC_MEMORY_ERROR;
+                cerr << "申请空间异常，请重新尝试!" << endl;
+                return -Error::ALLOC_MEMORY_ERROR;
             }
             else {
                 char* tmp = path;
@@ -48,8 +48,8 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             continue;
         }
         if (strlen(argv[i]) != 2 || argv[i][0] != '-') {
-            cout << "Parameter error!" << endl;
-            return -PARAMETER_NOT_EXISTS;
+            cout << "参数不存在，请重新输入!" << endl;
+            return -Error::PARAMETER_NOT_EXISTS;
         }
         switch (argv[i][1]) {
         case CALCULATE_CHAIN_COUNT_PARAMETER:
@@ -87,8 +87,8 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
             loop_enable = true;
             break;
         default:
-            cout << "Parameter form not correct!" << endl;
-            return -PARAMETER_FORM_ERROR;
+            cout << "参数不存在，请重新输入!" << endl;
+            return -PARAMETER_NOT_EXISTS;
         }
     }
     if (path == NULL) {

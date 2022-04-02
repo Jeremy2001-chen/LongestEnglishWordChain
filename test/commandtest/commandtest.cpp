@@ -29,15 +29,32 @@ namespace commandtest
 			ALLOC_MEMORY_ERROR,
 			PATH_NOT_EXISTS
 		};
-
-		TEST_METHOD(MULT_PATH_FILE)
+		TEST_METHOD(MULT_PATH_FILE_ERROR)
 		{
 			char* argv[] = {"Wordlist.exe", "-n", "../test/input1.txt", "../test/input2.txt" };
 			int problemType, start, end;
 			bool loop_enable;
 			char* name;
 			int r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
-			Assert::AreEqual(r, -MULTI_FILE_PATH);
+			Assert::AreEqual(r, (int)-Error::MULTI_FILE_PATH);
+		}
+
+		TEST_METHOD(PARAMETER_NOT_EXISTS_ERROR)
+		{
+			char* argv[] = { "Wordlist.exe", "-n", "../test/input1.txt", "-s"};
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::PARAMETER_NOT_EXISTS);
+
+			argv[3] = "s";
+			r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::PARAMETER_NOT_EXISTS);
+			
+			argv[3] = "≤‚ ‘÷–ŒÁ≤Œ ˝";
+			r = parameterExtract(argv, 4, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::PARAMETER_NOT_EXISTS);
 		}
 	};
 }
