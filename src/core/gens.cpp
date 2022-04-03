@@ -440,8 +440,8 @@ int gen_chain_word_loop(char* words[], int len, char* result[], char head, char 
 	int pointColor[MAXN_POINT];
 	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
-	printf("getting topo order...\n");
-	//printf("%x\n", noLoopGraph);
+	// printf("getting topo order...\n");
+	// printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
 	int r = topoSort(noLoopGraph, topo);
 	assert(r == 0);
@@ -474,7 +474,7 @@ int gen_chain_word_loop(char* words[], int len, char* result[], char head, char 
 		return 0; //todo
 	}
 
-	cout << "Max len: " << dp[maxa] << endl;
+	// cout << "Max len: " << dp[maxa] << endl;
 
 	//initial
 	int length = gen_chain_word_result_loop(maxa, preEdge, preSCCPoint, pointColor, subLoopGraph, noLoopGraph);
@@ -812,7 +812,7 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 
 	getNoLoopGraph(noSelfLoopGraph, &noLoopGraph, subLoopGraph, &subGraphCnt, pointColor);
 	// get topo order
-	printf("getting topo order...\n");
+	// printf("getting topo order...\n");
 	//printf("%x\n", noLoopGraph);
 	int topo[MAXN_POINT];
 	int r = topoSort(noLoopGraph, topo);
@@ -847,7 +847,7 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 		return 0; //todo
 	}
 
-	cout << "Max len: " << dp[maxa] << endl;
+	//cout << "Max len: " << dp[maxa] << endl;
 
 	//initial
 	int length = gen_chain_char_result_loop(maxa, preEdge, preSCCPoint, pointColor, subLoopGraph, noLoopGraph);
@@ -909,15 +909,15 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		}
 	}
 
-	for (int i = 0; i < SET_SIZE; i++) {
-		cout << dp[i] << " ";
-	}
-	cout << endl;
+	//for (int i = 0; i < SET_SIZE; i++) {
+	//	cout << dp[i] << " ";
+	//}
+	//cout << endl;
 
-	for (int i = 0; i < SET_SIZE; i++) {
-		cout << dpCnt[i] << " ";
-	}
-	cout << endl;
+	//for (int i = 0; i < SET_SIZE; i++) {
+	//	cout << dpCnt[i] << " ";
+	//}
+	//cout << endl;
 
 	// get end points
 	int maxa = 0;
@@ -959,7 +959,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 		length++;
 		now = from;
 	}
-	cout << now << endl;
+	//cout << now << endl;
 	int now_weight = noSelfLoopGraph->getPointWeight(now);
 	if (now_weight > 0) {
 		int* first = noSelfLoopGraph->getSelfEdgeFirst();

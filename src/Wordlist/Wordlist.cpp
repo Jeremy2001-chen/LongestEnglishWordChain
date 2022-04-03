@@ -9,7 +9,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     int r = myControll(argc, argv);
-
     system("pause");
     return 0;
 }
