@@ -11,7 +11,7 @@ from PyQt5.QtGui import *
 def calculate(sur, fileName, start, end, problemType, loopEnable):
     print(os.getcwd())
 
-    commandDLL = ctypes.windll.LoadLibrary("./control.dll")
+    commandDLL = ctypes.windll.LoadLibrary("./core.dll")
 
     call_func = commandDLL.call_by_cmd
 
@@ -37,9 +37,16 @@ def calculate(sur, fileName, start, end, problemType, loopEnable):
 
     result = commandDLL.call_by_cmd(len(cmd), ctypes.c_char_p(cmd.encode('utf-8'))).decode('gbk')
 
-    print(result)
-
-    if result == "":
+    res = result.split("\n")
+    
+    feed = res[len(res)-2]
+    if feed.startswith("return value:"):
+        pos = feed.find(':')
+        ans = int(feed[pos+2:])
+        with open("solution.txt", 'w') as f:
+            for i in range(len(res)-2-ans,len(res)-2):
+                f.write(res[i] + "\n")
+        f.close()
         from output import outputSurface
         sur.close()
         global surface
