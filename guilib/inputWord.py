@@ -87,7 +87,6 @@ class inputWordSurface(Surface):
         QMessageBox.information(self, '消息', "文件内容已导入到文本框中！")
 
     def set_btn_clicked(self):
-        print("GGGG")
         fileName = "tempFileName.txt"
         try:
             with open(fileName, 'w') as f:
