@@ -27,6 +27,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
     start = end = 0;
     loop_enable = false;
     for (int i = 1; i < argc; i++) {
+        cout << argv[i] << endl;
         if (checkFilePath(argv[i])) {
             if (pathFind) {
                 cerr << "指定了多个文件路径，请仅指定单一路径!" << endl;

@@ -13,6 +13,7 @@ char* call_by_cmd(int len, char* cmd) {
 		command += cmd[i];
 	command += " 2>&1";
 
+	cout << command << endl;
 	FILE* pipe = _popen(command.c_str(), "r");
 	if (!pipe) {
 		return pipeError;

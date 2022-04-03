@@ -6,15 +6,18 @@
 #include "word.h"
 #include "gens.h"
 #include <cassert>
+#include <fstream>
 
 int chain_count = 0;
 
 vector<Word*>* chain;
+ofstream eout("error.log");
 
 int checkWordAvailable(char* words[], int len) {
 	for (int i = 1; i <= len; ++i)
 		if (words[i] == NULL) {
 			cerr << "传入接口的单词表有误，存在空单词，请检查单词合法性" << endl;
+			eout << "传入接口的单词表有误，存在空单词，请检查单词合法性" << endl;
 			return -WORD_NOT_AVAILABLE;
 		}
 	return 0;
@@ -101,6 +104,7 @@ int gen_chains_all(char* words[], int len, char* result[]) {
 	r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		cerr << "单词表中包含隐藏环" << endl;
+		eout << "单词表中包含隐藏环" << endl;
 		return -Error::HAVE_LOOP;
 	}
 
@@ -137,6 +141,7 @@ int gen_chain_word_unique(char* words[], int len, char* result[]) {
 	r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		cerr << "单词表中包含隐藏环" << endl;
+		eout << "单词表中包含隐藏环" << endl;
 		return -Error::HAVE_LOOP;
 	}
 
@@ -493,6 +498,7 @@ int gen_chain_word_loopless(char* words[], int len, char* result[], char head, c
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		cerr << "单词表中包含隐藏环" << endl;
+		eout << "单词表中包含隐藏环" << endl;
 		return -Error::HAVE_LOOP;
 	}
 
@@ -871,6 +877,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 	int r = topoSort(noSelfLoopGraph, topo);
 	if (r < 0) {
 		cerr << "单词表中包含隐藏环" << endl;
+		eout << "单词表中包含隐藏环" << endl;
 		return -Error::HAVE_LOOP;
 	}
 

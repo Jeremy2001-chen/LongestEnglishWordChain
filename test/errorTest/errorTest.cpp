@@ -37,6 +37,7 @@ namespace errorTest
 			PARAMETER_FORM_ERROR,
 			ALLOC_MEMORY_ERROR,
 			MULTI_WORK_ERROR,
+			NO_WORK_ERROR,
 			FIRST_CHAR_DUPLICATE,
 			FINAL_CHAR_DUPLICATE,
 			ENABLE_LOOP_DUPLICATE,
@@ -112,7 +113,7 @@ namespace errorTest
 			Assert::AreEqual(r, (int)-Error::CHAR_FORM_ERROR);
 		}
 
-		TEST_METHOD(MULTI_WORK)
+		TEST_METHOD(MULTI_WORK_ERR)
 		{
 			char* argv[] = { "Wordlist.exe", "-n", "-w" };
 			int problemType, start, end;
@@ -120,6 +121,17 @@ namespace errorTest
 			char* name;
 			int r = parameterExtract(argv, 3, problemType, loop_enable, start, end, &name);
 			Assert::AreEqual(r, (int)-Error::MULTI_WORK_ERROR);
+		}
+
+
+		TEST_METHOD(NO_WORK_ERR)
+		{
+			char* argv[] = { "Wordlist.exe", "-r", "../test/input1.txt" };
+			int problemType, start, end;
+			bool loop_enable;
+			char* name;
+			int r = parameterExtract(argv, 3, problemType, loop_enable, start, end, &name);
+			Assert::AreEqual(r, (int)-Error::NO_WORK_ERROR);
 		}
 
 		TEST_METHOD(FIRST_CHAR_DUP)
@@ -167,15 +179,6 @@ namespace errorTest
 		}
 
 		TEST_METHOD(NO_FILE_ERROR)
-		{
-			char fileName[100] = "../test/input0.txt";
-			char* word[500];
-			int len = 0;
-			int r = handleInput(fileName, word, &len);
-			Assert::AreEqual(r, (int)-Error::FILE_NOT_FIND);
-		}
-
-		TEST_METHOD(NO_FILE_ERR)
 		{
 			char fileName[100] = "../test/input0.txt";
 			char* word[500];

@@ -152,5 +152,10 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
         eout << "-m参数不支持和其他参数共同使用!" << endl;
         return -Error::M_WORK_WITH_OTHER_PARAMETER;
     }
+    if (problemType == -1) {
+        cerr << "未指定任务，请指定一个任务!" << endl;
+        eout << "未指定任务，请指定一个任务!" << endl;
+        return -Error::NO_WORK_ERROR;
+    }
     return 0;
 }
