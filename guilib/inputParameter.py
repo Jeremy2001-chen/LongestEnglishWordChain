@@ -156,7 +156,7 @@ class inputParameterSurface(Surface):
             end = ""
 
         loop = self.loopBox.currentText()
-        if loop == " «":
+        if loop == "‘ –Ì":
             loop = "yes"
         else:
             loop = "no"
@@ -170,8 +170,5 @@ class inputParameterSurface(Surface):
         print(problemType)
         print(fileName)
 
-        global surface
-        surface = ""
-        self.close()
         from calculate import calculate
-        calculate(fileName, start, end, problemType, loop)
+        calculate(self, fileName, start, end, problemType, loop)

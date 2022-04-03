@@ -1,9 +1,14 @@
+# coding=gbk
+
 import ctypes
 import os
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 
-def calculate(fileName, start, end, problemType, loopEnable):
+def calculate(sur, fileName, start, end, problemType, loopEnable):
     print(os.getcwd())
 
     commandDLL = ctypes.windll.LoadLibrary("./control.dll")
@@ -13,27 +18,38 @@ def calculate(fileName, start, end, problemType, loopEnable):
     call_func.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_char)]
 
     cmd = "Wordlist.exe"
+
     if start != "":
         cmd += " " + "-h " + start
 
     if end != "":
         cmd += " " + "-t " + end
-
+        
     if loopEnable == "yes":
         cmd += " -r"
 
     cmd += " " + problemType + " " + fileName
 
+    print(cmd)
+
     call_func.restype = ctypes.c_char_p
 
-    print(cmd)
 
     result = commandDLL.call_by_cmd(len(cmd), ctypes.c_char_p(cmd.encode('utf-8'))).decode('gbk')
 
     print(result)
 
-    from output import outputSurface
-    global surface
-    surface = outputSurface()
-    surface.show()
+    if result == "":
+        from output import outputSurface
+        sur.close()
+        global surface
+        surface = outputSurface()
+        surface.show()
+
+    else:
+        QMessageBox.information(sur, '¾¯¸æ', result)
+        sur.close()
+        from inputWord import inputWordSurface
+        surface = inputWordSurface()
+        surface.show()
 

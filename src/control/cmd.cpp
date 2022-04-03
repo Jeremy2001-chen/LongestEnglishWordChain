@@ -12,7 +12,8 @@ int argc = 0;
 
 char* call_by_cmd(int len, char* cmd) {
 	char* st = cmd, * ed = cmd;
-	cout << cmd << endl;
+	FILE* logFile;
+	int r = freopen_s(&logFile, "error.log", "w", stderr);
 	argc = 0;
 	for (int i = 0; i < len; i++) {
 		if (*ed == ' ') {
@@ -23,7 +24,6 @@ char* call_by_cmd(int len, char* cmd) {
 				argv[argc - 1][j++] = *st++;
 			}
 			argv[argc - 1][j] = '\0';
-			cout << "check : " << argv[argc - 1] << endl;
 			st = ed + 1;
 		}
 		ed++;
@@ -37,12 +37,10 @@ char* call_by_cmd(int len, char* cmd) {
 	}
 	argv[argc - 1][j] = '\0';
 
-	for (int i = 0; i < argc; ++i)
-		cout << argv[i] << " ";
-	cout << endl;
-
-	int r = myControll(argc, argv);
+	r = myControll(argc, argv);
 	
+	fclose(logFile);
+
 	char* res;
 	if (r < 0) {
 		FILE* eFile;
@@ -57,6 +55,7 @@ char* call_by_cmd(int len, char* cmd) {
 			res[i] = output[i];
 		}
 		res[output.size()] = '\0';
+		fclose(eFile);
 	}
 	else {
 		res = (char*)malloc(1);
