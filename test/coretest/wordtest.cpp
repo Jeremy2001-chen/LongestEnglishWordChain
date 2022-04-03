@@ -115,7 +115,7 @@ namespace wordtest
 										"../test/input4.txt",
 										"../test/input5.txt",
 										};
-			int std_ans[10] = { -1, -1, -1, 4, -1, 2 };
+			int std_ans[10] = { -19, -19, -19, 4, -19, 2 };
 			for (int i = 0; i < 6; i++) {
 				gen_word_nnf(filename[i], std_ans[i]);
 			}
@@ -146,7 +146,7 @@ namespace wordtest
 										"../test/input4.txt",
 										"../test/input5.txt",
 			};
-			int std_ans[10] = { -1, -1, -1, 2, -1, 2 };
+			int std_ans[10] = { -19, -19, -19, 2, -19, 2 };
 			char head[10] = { 0, 0, 0, 'p', 0, 'a' };
 			char tail[10] = { 0, 0, 0, 'm', 0, 'b' };
 			for (int i = 0; i < 6; i++) {

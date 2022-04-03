@@ -105,7 +105,7 @@ namespace genalltest
 
 			output(path, ans, result, ans);
 
-			Assert::AreEqual(ans, 18992);
+			Assert::AreEqual(ans, -19);
 
 		}
 	
@@ -123,7 +123,7 @@ namespace genalltest
 
 			output(path, ans, result, ans);
 
-			Assert::AreEqual(ans, 3737);
+			Assert::AreEqual(ans, -19);
 
 		}
 
@@ -141,7 +141,7 @@ namespace genalltest
 
 			output(path, ans, result, ans);
 
-			Assert::AreEqual(ans, 57);
+			Assert::AreEqual(ans, -19);
 
 		}
 
@@ -177,7 +177,7 @@ namespace genalltest
 
 			output(path, ans, result, ans);
 
-			Assert::AreEqual(ans, 9);
+			Assert::AreEqual(ans, -19);
 
 		}
 
