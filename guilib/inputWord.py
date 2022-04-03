@@ -87,9 +87,14 @@ class inputWordSurface(Surface):
         QMessageBox.information(self, '消息', "文件内容已导入到文本框中！")
 
     def set_btn_clicked(self):
+        print("GGGG")
         fileName = "tempFileName.txt"
-        with open(fileName, 'w') as f:
-            f.write(self.wordInput.toPlainText())
+        try:
+            with open(fileName, 'w') as f:
+                f.write(self.wordInput.toPlainText())
+            f.close()
+        except Exception as e:
+            print(e)
         QMessageBox.information(self, '消息', "文件内容已导入！")
         from inputParameter import inputParameterSurface
         global surface

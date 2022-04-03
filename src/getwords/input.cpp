@@ -8,7 +8,6 @@
 #include <fstream>
 
 using namespace std;
-ofstream eout("error.log");
 
 set <string> wordSet;
 
@@ -17,7 +16,6 @@ int handleInput(char* fileName, char* word[], int* len){
 	int r = fopen_s(&file, fileName, "r");
 	if (file == NULL) {
 		cerr << "单词表所在文件不存在！" << endl;
-		eout << "单词表所在文件不存在！" << endl;
 		return -FILE_NOT_FIND; //todo
 	}
 	else {
@@ -68,6 +66,7 @@ int handleInput(char* fileName, char* word[], int* len){
 		printf("\n");
 		*/
 	}
+	fclose(file);
 	return 0;
 }
 

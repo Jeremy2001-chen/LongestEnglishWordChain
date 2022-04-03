@@ -13,6 +13,7 @@ def calculate(fileName, start, end, problemType, loopEnable):
     call_func.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_char)]
 
     cmd = "Wordlist.exe"
+
     if start != "":
         cmd += " " + "-h " + start
 
@@ -24,9 +25,9 @@ def calculate(fileName, start, end, problemType, loopEnable):
 
     cmd += " " + problemType + " " + fileName
 
+    print(cmd)
     call_func.restype = ctypes.c_char_p
 
-    print(cmd)
 
     result = commandDLL.call_by_cmd(len(cmd), ctypes.c_char_p(cmd.encode('utf-8'))).decode('gbk')
 

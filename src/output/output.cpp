@@ -22,4 +22,5 @@ void output(char* path, int ans, char* result[], int len) {
     for (int i = 1; i <= len; ++i) {
         sout << result[i] << endl;
     }
+    sout.close();
 }
