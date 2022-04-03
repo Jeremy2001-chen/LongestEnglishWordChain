@@ -103,7 +103,7 @@ namespace uniquetest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
+			Assert::AreEqual(ans, -19);
 
 		}
 
@@ -121,7 +121,7 @@ namespace uniquetest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
+			Assert::AreEqual(ans, -19);
 
 		}
 
@@ -139,7 +139,7 @@ namespace uniquetest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
+			Assert::AreEqual(ans, -19);
 
 		}
 
@@ -175,7 +175,7 @@ namespace uniquetest
 
 			output(path, ans, result, (ans > 0));
 
-			Assert::AreEqual(ans, -1);
+			Assert::AreEqual(ans, -19);
 
 		}
 
