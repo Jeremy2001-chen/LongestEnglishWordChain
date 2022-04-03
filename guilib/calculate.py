@@ -45,7 +45,6 @@ def calculate(sur, fileName, start, end, problemType, loopEnable):
         global surface
         surface = outputSurface()
         surface.show()
-
     else:
         QMessageBox.information(sur, '¾¯¸æ', result)
         sur.close()

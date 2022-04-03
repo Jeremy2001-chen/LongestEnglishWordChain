@@ -18,7 +18,6 @@ int myControll(int argc, char* argv[])
     int problemType, start = 0, end = 0;
     bool loop_enable = false;
     char* name;
-    argc = 3;
     int r = parameterExtract(argv, argc, problemType, loop_enable, start, end, &name);
 
     if (r < 0) {
