@@ -123,7 +123,7 @@ namespace autochecker
         std::string ans[MAXN];
 
         void dfs_find_chain_max(int pt, int len, bool first_diff, int END) {
-            if (len > ansLen && (END == -1 || END == pt)) {
+            if (len > ansLen && (END == -1 || END == pt) && chainLen > 1) {
                 ansLen = len;
                 outputLen = chainLen;
                 for (int i = 1; i <= chainLen; ++i) {
@@ -539,17 +539,19 @@ namespace autochecker
 
 
             int std_ans = checker(head, tail, false, true, false);
-            if (std_ans == 1)
+            if (outputLen == 1)
                 std_ans = 0;
 
             char path[100] = "../test/output.txt";
 
-            int ans = gen_chain_word(words, len, result, head, tail, true);
+            int ans = gen_chain_char(words, len, result, head, tail, true);
 
             int ans_len = 0;
-            for (int i = 0; i < strlen(result[1]); i++) {
-                if (result[1][i] >= 'a' && result[1][i] <= 'z')
-                    ans_len ++;
+            if (ans > 0) {
+                for (int i = 0; i < strlen(result[1]); i++) {
+                    if (result[1][i] >= 'a' && result[1][i] <= 'z')
+                        ans_len++;
+                }
             }
 
             output(path, ans, result, (ans > 0));
@@ -571,6 +573,8 @@ namespace autochecker
                 'a', 'b', 'c', 'd', 'e', 'f', 0
             };
 
+            //gen_char_fft('a', 'a', len);
+            
             for (int i = 0; i < 1; i++) {
                 char head = mhead[i];
                 for (int j = 0; j < 1; j++) {
@@ -578,6 +582,7 @@ namespace autochecker
                     gen_char_fft(head, tail, len);
                 }
             }
+            
         }
 
         TEST_METHOD(autotestchar1)
@@ -612,6 +617,8 @@ namespace autochecker
                 'a', 'b', 0
             };
 
+            //gen_char_fft(0, 0, len);
+            
             for (int i = 0; i < 3; i++) {
                 char head = mhead[i];
                 for (int j = 0; j < 3; j++) {
@@ -619,6 +626,7 @@ namespace autochecker
                     gen_char_fft(head, tail, len);
                 }
             }
+            
         }
 
         TEST_METHOD(autotestchar3)
@@ -653,7 +661,8 @@ namespace autochecker
             char mhead[10] = {
                 'e', 'h', 't', 0
             };
-
+            gen_char_fft('t', 'e', len);
+            /*
             for (int i = 0; i < 4; i++) {
                 char head = mhead[i];
                 for (int j = 0; j < 4; j++) {
@@ -661,6 +670,7 @@ namespace autochecker
                     gen_char_fft(head, tail, len);
                 }
             }
+            */
         }
 
         TEST_METHOD(autotestchar5)
@@ -674,9 +684,11 @@ namespace autochecker
                 'a', 'b', 0
             };
 
-            for (int i = 0; i < 3; i++) {
+            //gen_char_fft('b', 'b', len);
+
+            for (int i = 0; i < 2; i++) {
                 char head = mhead[i];
-                for (int j = 0; j < 3; j++) {
+                for (int j = 0; j < 2; j++) {
                     char tail = mhead[j];
                     gen_char_fft(head, tail, len);
                 }
@@ -774,6 +786,8 @@ namespace autochecker
                 'a', 'b', 'c', 'd', 0
             };
 
+            //gen_char_fft('b', 'c', len);
+            
             for (int i = 0; i < 5; i++) {
                 char head = mhead[i];
                 for (int j = 0; j < 5; j++) {
@@ -781,6 +795,7 @@ namespace autochecker
                     gen_char_fft(head, tail, len);
                 }
             }
+            
         }
 
         TEST_METHOD(autotestchar11)
@@ -794,13 +809,15 @@ namespace autochecker
                 'a', 'c', 0
             };
 
-            for (int i = 0; i < 3; i++) {
+            gen_char_fft('a', 'a', len);
+
+            /*for (int i = 0; i < 3; i++) {
                 char head = mhead[i];
                 for (int j = 0; j < 3; j++) {
                     char tail = mhead[j];
                     gen_char_fft(head, tail, len);
                 }
-            }
+            }*/
         }
 
         TEST_METHOD(autotestchar12)

@@ -143,5 +143,5 @@ void buildGraph(Graph** graph, Graph** noLoopGraph, char* word[], int cnt);
 int topoSort(Graph*, int*);
 void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph, int *subGraphCnt, int* pointColor);
 
-void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph);
+void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph, int head_p, int tail_p);
 #endif

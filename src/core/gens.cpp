@@ -224,11 +224,17 @@ int wordCnt = 0;
 bool get_sub_graph_chain_word(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
 	//cout << "x = " << x << " length = " << length  << " end  = " << end << endl;
 	if (length == 0) {
-		for (int i = 1; i <= wordCnt; i++) {
-			subChain->push_back(wordList[i]);
+		if (end == x) {
+			for (int i = 1; i <= wordCnt; i++) {
+				subChain->push_back(wordList[i]);
+			}
+			return 1;
 		}
-		return 1;
+		else {
+			return 0;
+		}
 	}
+
 	pointVistCnt[x]++;
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
@@ -247,7 +253,7 @@ bool get_sub_graph_chain_word(Graph* graph, int x, int end, int length, vector<W
 				for (int e = selfFirst[to]; e; e = graph->getNext(e)) {
 					wordList[++wordCnt] = graph->getEdgeWord(e);
 				}
-				// cout << "to = " << to << " to_weight = " << to_weight << endl;
+				//cout << "to = " << to << " to_weight = " << to_weight << endl;
 			}
 			if (get_sub_graph_chain_word(graph, to, end, length - 1 - to_weight, subChain)) {
 				return 1;
@@ -376,7 +382,8 @@ int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 
 	bool inSCC = false;
 	while (preEdge[now] > 0 || !inSCC && preSCCPoint[now] >= 0) {
-		// cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
+		//cout << "now = " << now << endl;
+		//cout << "now = " << now << " preSCC = " << preSCCPoint[now] << "  preEdge = " << preEdge[now] << endl;
 		if (!inSCC && preSCCPoint[now] >= 0) {
 			inSCC = true;
 			int from = preSCCPoint[now];
@@ -385,6 +392,7 @@ int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 			wordCnt = 0;
 			memset(vist, 0, sizeof(vist));
 			memset(pointVistCnt, 0, SET_SIZE << 2);
+			//cout << "from = " << (char)(from + 'a') << " now = " << (char)(now + 'a') << endl;
 			int r = get_sub_graph_chain_word(&subLoopGraph[col], from, now, subGraphMaxDist[from][now], subChain);
 			if (!r) {
 				//system("pause");
@@ -428,6 +436,7 @@ int gen_chain_word_result_loop(int now, int preEdge[], int preSCCPoint[], int po
 }
 
 int gen_chain_word_loop(char* words[], int len, char* result[], char head, char tail) {
+
 	// get graph
 	//printf("getting graph...\n");
 	Graph* inputGraph, * noSelfLoopGraph;
@@ -474,6 +483,7 @@ int gen_chain_word_loop(char* words[], int len, char* result[], char head, char 
 		return 0; //todo
 	}
 
+	//printf("in gen word loop %d\n", maxa);
 	// cout << "Max len: " << dp[maxa] << endl;
 
 	//initial
@@ -592,11 +602,17 @@ int gen_chain_word(char* words[], int len, char* result[], char head, char tail,
 bool get_sub_graph_chain_char(Graph* graph, int x, int end, int length, vector<Word*>* subChain) { // length is needed
 	//cout << "x = " << x << " length = " << length  << " end  = " << end << endl;
 	if (length == 0) {
-		for (int i = 1; i <= wordCnt; i++) {
-			subChain->push_back(wordList[i]);
+		if (end == x) {
+			for (int i = 1; i <= wordCnt; i++) {
+				subChain->push_back(wordList[i]);
+			}
+			return 1;
 		}
-		return 1;
+		else {
+			return 0;
+		}
 	}
+
 	pointVistCnt[x]++;
 	int* first = graph->getFirst();
 	for (int e = first[x]; e; e = graph->getNext(e)) {
@@ -802,7 +818,7 @@ int gen_chain_char_loop(char* words[], int len, char* result[], char head, char 
 
 	// delete useless edges, incase of the misleading of single long word
 	Graph* tmpGraph;
-	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph);
+	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph, head - 'a', tail - 'a');
 	noSelfLoopGraph = tmpGraph;
 
 	// get loopless graph
@@ -863,7 +879,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 
 	// delete useless edges, incase of the misleading of single long word
 	Graph* tmpGraph;
-	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph);
+	getNewNoSelfLoopGraph(noSelfLoopGraph, &tmpGraph, head - 'a', tail - 'a');
 	noSelfLoopGraph = tmpGraph;
 
 	// get topo order

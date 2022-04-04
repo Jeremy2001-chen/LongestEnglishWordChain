@@ -145,7 +145,328 @@ void getNoLoopGraph(Graph* noSelfLoopGraph, Graph** noLoopGraph, Graph* subGraph
 	(*subGraphCnt) = blockNum;
 }
 
-void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph) {
+void getDelOneEdgeGraph(Graph* noSelfLoopGraph, Graph** delOneEdgeGraph, int delEdge) {
+	int point_count = noSelfLoopGraph->getPointCount();
+	Graph* crossGraph = new Graph(point_count);
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* first = noSelfLoopGraph->getFirst();
+		for (int e = first[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			if (e == delEdge) 
+				continue;
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int t = noSelfLoopGraph->getEdgeEnd(e);
+			int len = noSelfLoopGraph->getEdgeValue(e);
+			Word* word = noSelfLoopGraph->getEdgeWord(e);
+			crossGraph->link(s, t, len, word);
+		}
+	}
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* selfFirst = noSelfLoopGraph->getSelfEdgeFirst();
+		for (int e = selfFirst[i]; e; e = noSelfLoopGraph->getNext(e)) {
+			if (e == delEdge)
+				continue;
+			int s = noSelfLoopGraph->getEdgeStart(e);
+			int s_weight = noSelfLoopGraph->getPointWeight(s);
+			int len = noSelfLoopGraph->getEdgeValue(e);
+			Word* word = noSelfLoopGraph->getEdgeWord(e);
+			crossGraph->addPointWeight(s, len, word);
+		}
+	}
+	(*delOneEdgeGraph) = crossGraph;
+}
+
+void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail_p) {
+
+	int point_count = crossGraph->getPointCount();
+	
+	Graph* newCrossGraph = new Graph(point_count);
+
+	int ind[MAXN_POINT], oud[MAXN_POINT];
+	memset(ind, 0, (SET_SIZE << 2));
+	memset(oud, 0, (SET_SIZE << 2));
+
+	for (int i = 0; i < SET_SIZE; i++) {
+		int* first = crossGraph->getFirst();
+		for (int e = first[i]; e; e = crossGraph->getNext(e)) {
+			int s = crossGraph->getEdgeStart(e);
+			int t = crossGraph->getEdgeEnd(e);
+			ind[t]++;
+			oud[s]++;
+		}
+	}
+
+	if (head_p >= 0 && tail_p >= 0) {
+		int flag = 0;
+		int del_flag = 0;
+
+		if (head_p != tail_p) {
+
+			int* first = crossGraph->getFirst();
+			for (int e = first[head_p]; e; e = crossGraph->getNext(e)) {
+				if (flag)
+					break;
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				int t = crossGraph->getEdgeEnd(e);
+				int t_weight = crossGraph->getPointWeight(t);
+				if (t == tail_p) {
+					flag = 1;
+					Graph* delOneEdgeGraph;
+					getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+					Graph* noLoopGraph;
+					Graph subGraph[MAXN_POINT];
+					int subGraphCnt = 0;
+					int pointColor[MAXN_POINT];
+					getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+					int pointCnt[MAXN_POINT];
+					memset(pointCnt, 0, sizeof(pointCnt));
+					for (int ii = 0; ii < subGraphCnt; ii++) {
+						pointCnt[pointColor[ii]]++;
+					}
+					if (s_weight == 0 && t_weight == 0 && pointCnt[pointColor[s]] == 1 && pointCnt[pointColor[t]] == 1) {
+						del_flag = 1;
+					}
+				}
+			}
+		}
+		else {
+			int* first = crossGraph->getSelfEdgeFirst();
+			for (int e = first[head_p]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				if (flag)
+					break;
+				flag = 1;
+				Graph* delOneEdgeGraph;
+				getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+				Graph* noLoopGraph;
+				Graph subGraph[MAXN_POINT];
+				int subGraphCnt;
+				int pointColor[MAXN_POINT];
+				getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+				int pointCnt[MAXN_POINT];
+				memset(pointCnt, 0, sizeof(pointCnt));
+				for (int ii = 0; ii < subGraphCnt; ii++) {
+					pointCnt[pointColor[ii]]++;
+				}
+				/*for (int ii = 0; ii < SET_SIZE; ii++) {
+					cout << pointCnt[ii] << " ";
+				}
+				cout << endl << s_weight << endl;;
+				*/
+				if (s_weight == 1 && pointCnt[pointColor[s]] == 1) {
+					del_flag = 1;
+				}
+			}
+		}
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* first = crossGraph->getFirst();
+			for (int e = first[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int t = crossGraph->getEdgeEnd(e);
+				if (s == head_p && t == tail_p && del_flag == 1)
+					continue;
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				newCrossGraph->link(s, t, len, word);
+			}
+		}
+
+		// for a self-loop-edge, we delete it when ind[x] == 0 && oud[x] == 0 && point_weigh[x] == 1
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* selfFirst = crossGraph->getSelfEdgeFirst();
+			for (int e = selfFirst[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				if (s == head_p && s == tail_p && del_flag == 1)
+					continue;
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				newCrossGraph->addPointWeight(s, len, word);
+			}
+		}
+
+	}
+	else if (head_p >= 0) {
+
+		int flag[MAXN_POINT];
+		int del_flag[MAXN_POINT];
+		memset(flag, 0, sizeof(flag));
+		memset(del_flag, 0, sizeof(del_flag));
+		int* first = crossGraph->getFirst();
+		for (int e = first[head_p]; e; e = crossGraph->getNext(e)) {
+			int s = crossGraph->getEdgeStart(e);
+			int s_weight = crossGraph->getPointWeight(s);
+			int t = crossGraph->getEdgeEnd(e);
+			int t_weight = crossGraph->getPointWeight(t);
+			if (flag[t])
+				continue;
+			flag[t] = 1;
+			Graph* delOneEdgeGraph;
+			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+			Graph* noLoopGraph;
+			Graph subGraph[MAXN_POINT];
+			int subGraphCnt;
+			int pointColor[MAXN_POINT];
+			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+			int pointCnt[MAXN_POINT];
+			memset(pointCnt, 0, sizeof(pointCnt));
+			for (int ii = 0; ii < subGraphCnt; ii++) {
+				pointCnt[pointColor[ii]]++;
+			}
+			if (t_weight == 0 && oud[t] == 0 && pointCnt[pointColor[s]] == 1 && s_weight == 0) {
+				del_flag[t] = 1;
+			}
+		}
+
+		first = crossGraph->getSelfEdgeFirst();
+		for (int e = first[head_p]; e; e = crossGraph->getNext(e)) {
+			int s = crossGraph->getEdgeStart(e);
+			int s_weight = crossGraph->getPointWeight(s);
+			if (flag[s])
+				break;
+			flag[s] = 1;
+			Graph* delOneEdgeGraph;
+			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+			Graph* noLoopGraph;
+			Graph subGraph[MAXN_POINT];
+			int subGraphCnt;
+			int pointColor[MAXN_POINT];
+			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+			int pointCnt[MAXN_POINT];
+			memset(pointCnt, 0, sizeof(pointCnt));
+			for (int ii = 0; ii < subGraphCnt; ii++) {
+				pointCnt[pointColor[ii]]++;
+			}
+			if (s_weight == 1 && oud[s] == 0 && pointCnt[pointColor[s]] == 1) {
+				del_flag[s] = 1;
+			}
+		}
+
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* first = crossGraph->getFirst();
+			for (int e = first[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int t = crossGraph->getEdgeEnd(e);
+				if (s == head_p && del_flag[t] == 1)
+					continue;
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				newCrossGraph->link(s, t, len, word);
+			}
+		}
+
+		// for a self-loop-edge, we delete it when ind[x] == 0 && oud[x] == 0 && point_weigh[x] == 1
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* selfFirst = crossGraph->getSelfEdgeFirst();
+			for (int e = selfFirst[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				if (s == head_p && del_flag[s] == 1)
+					continue;
+				newCrossGraph->addPointWeight(s, len, word);
+			}
+		}
+
+	}
+	else if (tail_p >= 0) {
+
+		int flag[MAXN_POINT];
+		int del_flag[MAXN_POINT];
+		memset(flag, 0, sizeof(flag));
+		memset(del_flag, 0, sizeof(del_flag));
+		int* first = crossGraph->getFirst();
+		for (int i = 0; i < SET_SIZE; i++) {
+			for (int e = first[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				int t = crossGraph->getEdgeEnd(e);
+				int t_weight = crossGraph->getPointWeight(t);
+				if (t != tail_p)
+					continue;
+				if (flag[s])
+					continue;
+				flag[s] = 1;
+				Graph* delOneEdgeGraph;
+				getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+				Graph* noLoopGraph;
+				Graph subGraph[MAXN_POINT];
+				int subGraphCnt;
+				int pointColor[MAXN_POINT];
+				getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+				int pointCnt[MAXN_POINT];
+				memset(pointCnt, 0, sizeof(pointCnt));
+				for (int ii = 0; ii < subGraphCnt; ii++) {
+					pointCnt[pointColor[ii]]++;
+				}
+				if (s_weight == 0 && ind[s] == 0 && pointCnt[pointColor[t]] == 1 && t_weight == 0) {
+					del_flag[s] = 1;
+				}
+			}
+		}
+
+		first = crossGraph->getSelfEdgeFirst();
+		for (int e = first[tail_p]; e; e = crossGraph->getNext(e)) {
+			int s = crossGraph->getEdgeStart(e);
+			int s_weight = crossGraph->getPointWeight(s);
+			if (flag[s])
+				break;
+			flag[s] = 1;
+			Graph* delOneEdgeGraph;
+			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
+			Graph* noLoopGraph;
+			Graph subGraph[MAXN_POINT];
+			int subGraphCnt;
+			int pointColor[MAXN_POINT];
+			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
+			int pointCnt[MAXN_POINT];
+			memset(pointCnt, 0, sizeof(pointCnt));
+			for (int ii = 0; ii < subGraphCnt; ii++) {
+				pointCnt[pointColor[ii]]++;
+			}
+			if (s_weight == 1 && ind[s] == 0 && pointCnt[pointColor[s]] == 1) {
+				del_flag[s] = 1;
+			}
+		}
+
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* first = crossGraph->getFirst();
+			for (int e = first[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int t = crossGraph->getEdgeEnd(e);
+				if (t == tail_p && del_flag[s] == 1)
+					continue;
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				newCrossGraph->link(s, t, len, word);
+			}
+		}
+
+		// for a self-loop-edge, we delete it when ind[x] == 0 && oud[x] == 0 && point_weigh[x] == 1
+		for (int i = 0; i < SET_SIZE; i++) {
+			int* selfFirst = crossGraph->getSelfEdgeFirst();
+			for (int e = selfFirst[i]; e; e = crossGraph->getNext(e)) {
+				int s = crossGraph->getEdgeStart(e);
+				int s_weight = crossGraph->getPointWeight(s);
+				int len = crossGraph->getEdgeValue(e);
+				Word* word = crossGraph->getEdgeWord(e);
+				if (s == tail_p && del_flag[s] == 1)
+					continue;
+				newCrossGraph->addPointWeight(s, len, word);
+			}
+		}
+
+	}
+	else {
+		newCrossGraph = crossGraph;
+	}
+
+	(*newNewGraph) = newCrossGraph;
+}
+
+void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph, int head_p, int tail_p) {
 
 	int point_count = noSelfLoopGraph->getPointCount();
 	Graph* crossGraph = new Graph(point_count);
@@ -194,6 +515,9 @@ void getNewNoSelfLoopGraph(Graph* noSelfLoopGraph, Graph** newNoSelfLoopGraph) {
 		}
 	}
 
+	Graph* newNewGraph;
+	getNewNewGraph(crossGraph, &newNewGraph, head_p, tail_p);
 
-	(*newNoSelfLoopGraph) = crossGraph;
+
+	(*newNoSelfLoopGraph) = newNewGraph;
 }
