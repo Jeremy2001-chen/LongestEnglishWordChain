@@ -20,7 +20,7 @@ int handleInput(char* fileName, char* word[], int* len){
 	}
 	else {
 		string s = "";
-		char c;
+		int c;
 		int wordCount = 0;
 		wordSet.clear();
 		while ((c = fgetc(file)) != EOF) {
