@@ -175,6 +175,8 @@ void getDelOneEdgeGraph(Graph* noSelfLoopGraph, Graph** delOneEdgeGraph, int del
 	(*delOneEdgeGraph) = crossGraph;
 }
 
+Graph subGraph[MAXN_POINT];
+
 void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail_p) {
 
 	int point_count = crossGraph->getPointCount();
@@ -184,6 +186,7 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 	int ind[MAXN_POINT], oud[MAXN_POINT];
 	memset(ind, 0, (SET_SIZE << 2));
 	memset(oud, 0, (SET_SIZE << 2));
+
 
 	for (int i = 0; i < SET_SIZE; i++) {
 		int* first = crossGraph->getFirst();
@@ -214,7 +217,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 					Graph* delOneEdgeGraph;
 					getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 					Graph* noLoopGraph;
-					Graph subGraph[MAXN_POINT];
 					int subGraphCnt = 0;
 					int pointColor[MAXN_POINT];
 					getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
@@ -240,7 +242,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 				Graph* delOneEdgeGraph;
 				getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 				Graph* noLoopGraph;
-				Graph subGraph[MAXN_POINT];
 				int subGraphCnt;
 				int pointColor[MAXN_POINT];
 				getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
@@ -305,7 +306,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 			Graph* delOneEdgeGraph;
 			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 			Graph* noLoopGraph;
-			Graph subGraph[MAXN_POINT];
 			int subGraphCnt;
 			int pointColor[MAXN_POINT];
 			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
@@ -329,7 +329,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 			Graph* delOneEdgeGraph;
 			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 			Graph* noLoopGraph;
-			Graph subGraph[MAXN_POINT];
 			int subGraphCnt;
 			int pointColor[MAXN_POINT];
 			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
@@ -392,7 +391,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 				Graph* delOneEdgeGraph;
 				getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 				Graph* noLoopGraph;
-				Graph subGraph[MAXN_POINT];
 				int subGraphCnt;
 				int pointColor[MAXN_POINT];
 				getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
@@ -417,7 +415,6 @@ void getNewNewGraph(Graph* crossGraph, Graph** newNewGraph, int head_p, int tail
 			Graph* delOneEdgeGraph;
 			getDelOneEdgeGraph(crossGraph, &delOneEdgeGraph, e);
 			Graph* noLoopGraph;
-			Graph subGraph[MAXN_POINT];
 			int subGraphCnt;
 			int pointColor[MAXN_POINT];
 			getNoLoopGraph(delOneEdgeGraph, &noLoopGraph, subGraph, &subGraphCnt, pointColor);
