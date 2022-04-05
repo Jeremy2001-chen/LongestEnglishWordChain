@@ -1,14 +1,11 @@
 #ifndef _PARAMETER_H_
 #define _PARAMETER_H_
 
+#include "pch.h"
+
 #define MAXN_WORD 20202
 
-#ifdef IMPORT_DLL
-#else
-#define IMPORT_DLL extern "C" _declspec(dllimport)
-#endif
-
-IMPORT_DLL int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable, int& start, int& end, char** name);
+EXPORT_DLL int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable, int& start, int& end, char** name);
 
 enum ProblemType {
 	WORD_CHAIN_COUNT_PROBLEM = 1,

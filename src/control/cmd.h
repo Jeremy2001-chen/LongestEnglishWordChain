@@ -3,6 +3,6 @@
 
 #include "pch.h"
 
-IMPORT_DLL char* call_by_cmd(int len, char* cmd);
+EXPORT_DLL char* call_by_cmd(int len, char* cmd);
 
 #endif

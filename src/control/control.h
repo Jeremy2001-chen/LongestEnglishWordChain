@@ -11,6 +11,6 @@ IMPORT_DLL int gen_chain_char(char* [], int, char* [], int, int, bool);
 
 IMPORT_DLL void output(char*, int, char* [], int, bool);
 
-IMPORT_DLL int myControll(int argc, char* argv[]);
+EXPORT_DLL int myControll(int argc, char* argv[]);
 
 #endif

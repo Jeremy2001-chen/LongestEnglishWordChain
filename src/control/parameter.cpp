@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#pragma warning(disable:4273)
+
 static bool inline checkFilePath(char* str) {
     int len = (int)strlen(str);
     if (len < 3)

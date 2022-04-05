@@ -15,4 +15,9 @@
 #define IMPORT_DLL extern "C" _declspec(dllimport)
 #endif
 
+#ifdef EXPORT_DLL
+#else
+#define EXPORT_DLL extern "C" _declspec(dllexport)
+#endif
+
 #endif //PCH_H

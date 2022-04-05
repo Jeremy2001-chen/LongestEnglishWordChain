@@ -6,6 +6,8 @@
 #include "parameter.h"
 #include "control.h"
 
+#pragma warning(disable:4273)
+
 using namespace std;
 
 const int MAXN = (int)1e6 + 10;

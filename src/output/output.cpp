@@ -5,6 +5,9 @@
 
 using namespace std;
 
+#pragma warning(disable:4273)
+
+
 void output(char* path, int ans, char* result[], int len, bool useFile) {
     if (useFile) {
         string exePath = path, solutionPath = "";

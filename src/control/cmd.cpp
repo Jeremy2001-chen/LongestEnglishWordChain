@@ -8,6 +8,7 @@
 using namespace std;
 
 #pragma warning(disable : 4996)
+#pragma warning(disable:4273)
 
 char* argv[10];
 const char* openFileError = "Open the error log error!";
