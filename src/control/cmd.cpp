@@ -46,14 +46,14 @@ char* call_by_cmd(int len, char* cmd) {
 
 	r = freopen_s(&solFile, "solution.txt", "w", stdout);
 
-	r = myControll(argc, argv);
+	int ret = myControll(argc, argv);
 
 	fclose(logFile);
 
 	r = freopen_s(&solFile, "CON", "w", stdout);
 
 	char* res;
-	if (r < 0) {
+	if (ret < 0) {
 		FILE* eFile;
 		r = fopen_s(&eFile, "error.log", "r");
 		if (eFile == 0) {
