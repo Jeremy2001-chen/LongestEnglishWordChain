@@ -8,7 +8,7 @@
 using namespace std;
 
 static bool inline checkFilePath(char* str) {
-    int len = strlen(str);
+    int len = (int)strlen(str);
     if (len < 3)
         return false;
     return str[len - 3] == 't' && str[len - 2] == 'x' && str[len - 1] == 't';
@@ -35,7 +35,7 @@ int parameterExtract(char* argv[], int argc, int& problemType, bool& loop_enable
                 return -Error::MULTI_FILE_PATH;
             }
             pathFind = true;
-            int len = strlen(argv[i]);
+            int len = (int)strlen(argv[i]);
             path = (char*)malloc(static_cast<size_t>((size_t)len + 1));
             if (path == NULL) {
                 cerr << "ÉêÇë¿Õ¼äÒì³££¬ÇëÖØÐÂ³¢ÊÔ!" << endl;
