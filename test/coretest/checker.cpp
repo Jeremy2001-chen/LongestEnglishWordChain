@@ -22,7 +22,7 @@ IMPORT_DLL int gen_chain_char(char* words[], int len, char* result[], char head,
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-const int MAXN = 2e4 + 10;
+const int MAXN = (int)2e4 + 10;
 namespace autochecker
 {
 
@@ -93,11 +93,13 @@ namespace autochecker
             FILE* file;
             fopen_s(&file, path, "w");
 
-            fprintf(file, "%d\n", len);
-            for (int i = 1; i <= len; ++i) {
-                fprintf(file, "%s\n", result[i]);
+            if (file) {
+                fprintf(file, "%d\n", len);
+                for (int i = 1; i <= len; ++i) {
+                    fprintf(file, "%s\n", result[i]);
+                }
+                fclose(file);
             }
-            fclose(file);
         }
 
         class Edges {
@@ -182,7 +184,7 @@ namespace autochecker
             edges[te].next = first[S];
             edges[te].id = id;
             if (tot_character) {
-                edges[te].len = word[id].size();
+                edges[te].len = (int)word[id].size();
             }
             else {
                 edges[te].len = 1;

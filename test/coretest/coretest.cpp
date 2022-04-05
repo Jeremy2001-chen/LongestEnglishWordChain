@@ -84,11 +84,13 @@ namespace coretest
 			FILE* file;
 			fopen_s(&file, path, "w");
 
-			fprintf(file, "%d\n", len);
-			for (int i = 1; i <= len; ++i) {
-				fprintf(file, "%s\n", result[i]);
+			if (file) {
+				fprintf(file, "%d\n", len);
+				for (int i = 1; i <= len; ++i) {
+					fprintf(file, "%s\n", result[i]);
+				}
+				fclose(file);
 			}
-			fclose(file);
 		}
 
 		int judge(char* words[], char* result[], int ans) {
