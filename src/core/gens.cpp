@@ -960,7 +960,7 @@ int gen_chain_char_loopless(char* words[], int len, char* result[], char head, c
 
 	int now = maxa;
 	while (preEdge[now] > 0) {
-		cout << now << endl;
+		//cout << now << endl;
 		int e = preEdge[now];
 		int now_weight = noSelfLoopGraph->getPointWeight(now);
 		if (now_weight > 0) {

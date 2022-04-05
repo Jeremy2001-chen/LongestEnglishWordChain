@@ -55,3 +55,6 @@ bin/fine-code-coverage/
 /test/getwordstest/*.vcxproj*
 /test/outputtest/x64
 /test/outputtest/*.vcxproj*
+/guilib/.idea/
+/test/output.txt
+/test/solution.txt
