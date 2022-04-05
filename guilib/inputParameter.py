@@ -163,12 +163,12 @@ class inputParameterSurface(Surface):
 
         fileName = "tempFileName.txt"
 
-        print("###############当前参数情况类型")
-        print(start)
-        print(end)
-        print(loop)
-        print(problemType)
-        print(fileName)
+        #print("###############当前参数情况类型")
+        #print(start)
+        #print(end)
+        #print(loop)
+        #print(problemType)
+        #print(fileName)
 
         from calculate import calculate
         calculate(self, fileName, start, end, problemType, loop)

@@ -9,7 +9,7 @@ from PyQt5.QtGui import *
 
 
 def calculate(sur, fileName, start, end, problemType, loopEnable):
-    print(os.getcwd())
+    # print(os.getcwd())
 
     commandDLL = ctypes.windll.LoadLibrary("./control.dll")
 
@@ -30,14 +30,14 @@ def calculate(sur, fileName, start, end, problemType, loopEnable):
 
     cmd += " " + problemType + " " + fileName
 
-    print(cmd)
+    # print(cmd)
 
     call_func.restype = ctypes.c_char_p
 
 
     result = commandDLL.call_by_cmd(len(cmd), ctypes.c_char_p(cmd.encode('utf-8'))).decode('gbk')
 
-    print(result)
+    # print(result)
 
     if result == "":
         from output import outputSurface

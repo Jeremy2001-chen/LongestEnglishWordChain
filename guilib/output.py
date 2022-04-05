@@ -91,6 +91,7 @@ class outputSurface(Surface):
             with open(fileName, 'w') as f:
                 f.write(self.wordOutput.toPlainText())
             f.close()
+
         except Exception as e:
             print(e)
             QMessageBox.information(self, '警告', "导出文件异常，请重新导出！")

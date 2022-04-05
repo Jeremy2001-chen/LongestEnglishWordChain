@@ -7,13 +7,16 @@
 
 using namespace std;
 
+#pragma warning(disable : 4996)
+
 char* argv[10];
 const char* openFileError = "Open the error log error!";
 int argc = 0;
 
 char* call_by_cmd(int len, char* cmd) {
+
 	char* st = cmd, * ed = cmd;
-	FILE* logFile;
+	FILE* logFile, * solFile;
 	int r = freopen_s(&logFile, "error.log", "w", stderr);
 	argc = 0;
 	for (int i = 0; i < len; i++) {
@@ -40,9 +43,13 @@ char* call_by_cmd(int len, char* cmd) {
 		*tmp = '\0';
 	}
 
+	r = freopen_s(&solFile, "solution.txt", "w", stdout);
+
 	r = myControll(argc, argv);
-	
+
 	fclose(logFile);
+
+	r = freopen_s(&solFile, "CON", "w", stdout);
 
 	char* res;
 	if (r < 0) {
