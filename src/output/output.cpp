@@ -35,7 +35,10 @@ void output(char* path, int ans, char* result[], int len, bool useFile) {
     else {
         cout << ans << endl;
         for (int i = 1; i <= len; ++i) {
-            cout << result[i] << endl;
+            if (i < len)
+                cout << result[i] << endl;
+            else
+                cout << result[i];
         }
     }
 }
