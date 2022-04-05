@@ -8,6 +8,8 @@
 #include <cassert>
 #include <fstream>
 
+#pragma warning(disable:4267)
+
 int chain_count = 0;
 
 vector<Word*>* chain;
