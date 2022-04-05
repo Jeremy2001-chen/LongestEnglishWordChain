@@ -37,28 +37,28 @@ int myControll(int argc, char* argv[])
         if (tot < 0) {
             return tot;
         }
-        output(name, tot, result, tot, false);
+        output(argv[0], tot, result, tot, false);
         break;
     case ProblemType::FIRST_CHAR_NOT_SAME_PROBLEM:
         tot = gen_chain_word_unique(wordList, wordCount, result);
         if (tot < 0) {
             return tot;
         }
-        output(name, tot, result, (tot > 0), true);
+        output(argv[0], tot, result, (tot > 0), true);
         break;
     case ProblemType::WORD_CHAIN_MAX_WORD_PROBLEM:
         tot = gen_chain_word(wordList, wordCount, result, start, end, loop_enable);
         if (tot < 0) {
             return tot;
         }
-        output(name, tot, result, (tot > 0), true);
+        output(argv[0], tot, result, (tot > 0), true);
         break;
     case ProblemType::WORD_CHAIN_MAX_CHAR_PROBLEM:
         tot = gen_chain_char(wordList, wordCount, result, start, end, loop_enable);
         if (tot < 0) {
             return tot;
         }
-        output(name, tot, result, (tot > 0), true);
+        output(argv[0], tot, result, (tot > 0), true);
         break;
     }
     return 0;

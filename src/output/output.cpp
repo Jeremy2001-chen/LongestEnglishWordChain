@@ -8,13 +8,13 @@ using namespace std;
 void output(char* path, int ans, char* result[], int len, bool useFile) {
     if (useFile) {
         string exePath = path, solutionPath = "";
+        
         for (int i = (int)exePath.size() - 1; i >= 0; --i)
             if (exePath[i] == '\\' || exePath[i] == '/') {
                 for (int j = 0; j <= i; ++j)
                     solutionPath += exePath[j];
                 break;
             }
-
         solutionPath += "solution.txt";
 
         FILE* file;
